@@ -2,25 +2,187 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
+  --brand-accent: #db0909;
+  --brand-red: #ff0000;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand-accent: var(--brand-accent);
+
+  --font-mono: var(--font-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-heading: var(--font-mono), "IBM Plex Mono", monospace;
+  --font-sans: var(--font-mono), "IBM Plex Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
+  overflow-x: hidden;
+}
+
+/* ============================================================================
+   ESTILOS ORIGINALES DE 890ARQ.CL (Botones desplazados .brd, inputs #DB0909)
+   ============================================================================ */
+
+/* Contenedor exterior de 1px que sostiene el botón desplazado (-14px, -14px) */
+.arq-btn-frame {
+  display: inline-block;
+  border: 1px solid #000000;
+  transition: border-color 0.25s ease;
+  background: transparent;
+}
+
+.arq-btn-frame:hover {
+  border-color: #ff0000;
+}
+
+/* Botón interior con borde 3px negro desplazado arriba a la izquierda */
+.arq-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-14px, -14px);
+  background-color: #ffffff;
+  color: #000000;
+  border: 3px solid #000000;
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 36px;
+  min-width: 170px;
+  text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.arq-btn:hover,
+.arq-btn:focus-visible {
+  background-color: #db0909;
+  color: #ffffff;
+  border-color: #db0909;
+}
+
+/* Variante compacta para sub-botones (Arquitectura, Construcción, Tasación, Equipo, Visión) */
+.arq-btn-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-12px, -12px);
+  background-color: #ffffff;
+  color: #000000;
+  border: 2.5px solid #000000;
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 11px 24px;
+  width: 154px;
+  text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.arq-btn-sm:hover,
+.arq-btn-sm:focus-visible {
+  background-color: #db0909;
+  color: #ffffff;
+  border-color: #db0909;
+}
+
+/* Inputs del formulario original (.wpforms-field-medium / small) */
+.arq-input {
+  border: 1px solid #db0909;
+  box-shadow: 10px 10px 0px #db0909;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 0;
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.arq-input:focus {
+  border-color: #000000;
+  box-shadow: 10px 10px 0px #db0909;
+}
+
+/* Botón Enviar de formularios (.wpforms-form button) */
+.arq-submit-btn {
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  background-color: #ffffff;
+  border: 3px solid #000000;
+  border-radius: 0;
+  padding: 14px 22px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.arq-submit-btn:hover:not(:disabled) {
+  background-color: #db0909;
+  color: #ffffff;
+  border-color: #db0909;
+}
+
+/* Flip cards para Nosotros / Equipo */
+.flip-card {
+  background-color: transparent;
+  width: 260px;
+  height: 260px;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.7s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 16px;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Clase base para las letras animadas del sello 890 / ARQ */
+.arq-wave-letter {
+  display: inline-block;
+  will-change: transform;
+}
+
+::selection {
+  background-color: #db0909;
+  color: #ffffff;
 }
