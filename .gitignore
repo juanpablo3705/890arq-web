@@ -37,9 +37,11 @@ yarn-error.log*
 .env.local
 !.env.example
 
-# references, raw assets, and local credentials
+# references, raw assets, internal guides, and local credentials
 /referencias-visuales
 /activos-originales
+/guia-890arq-web.md
+guia-890arq-web.md
 credenciales
 credenciales*
 *credenciales*
