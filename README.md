@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 890 ARQ — Sitio Web Corporativo (v2.0)
 
-## Getting Started
+Repositorio oficial de la **segunda versión (v2.0)** del portal corporativo y portafolio de proyectos de **890 ARQ** ([www.890arq.cl](https://www.890arq.cl)), oficina de arquitectura, construcción y gestión normativa municipal en la Región de Valparaíso, Chile.
 
-First, run the development server:
+Este proyecto corresponde a una reconstrucción integral desde cero de la plataforma web original, implementando una arquitectura moderna orientada al rendimiento, tipado estático estricto y gestión de contenidos en la nube.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Enlace de Producción
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* **Sitio publicado:** [https://890arq-web.vercel.app/](https://890arq-web.vercel.app/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Stack Tecnológico
 
-To learn more about Next.js, take a look at the following resources:
+* **Framework Web:** Next.js (App Router, Server Components & Server Actions)
+* **Librería de Interfaz:** React 19
+* **Lenguaje:** TypeScript (modo estricto)
+* **Estilos y Maquetación:** Tailwind CSS v4 + Lucide React
+* **Base de Datos y Almacenamiento Multimedia:** Supabase (PostgreSQL + Supabase Storage)
+* **Validación de Esquemas:** Zod
+* **Servicio de Correo Transaccional:** Resend
+* **Infraestructura y Despliegue:** Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Créditos y Autoría
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* **Diseño UI:** Gabriela Zett (`zett.webdesign@gmail.com`)
+* **Desarrollo Web (Reconstrucción Full-Stack v2.0):** Juan Pablo Oyanedel ([github.com/juanpablo3705](https://github.com/juanpablo3705))
