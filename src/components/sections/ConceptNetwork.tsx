@@ -22,6 +22,11 @@ export interface ConceptNode {
   phaseY: number;
 }
 
+const VIEW_X = 240;
+const VIEW_Y = 130;
+const VIEW_W = 1490;
+const VIEW_H = 900;
+
 const CONCEPT_NODES: ConceptNode[] = [
   {
     id: "diseno-arquitectonico",
@@ -352,50 +357,10 @@ const CONCEPT_EDGES: Array<[string, string]> = [
   ["consultoria-asesoria", "estudio-de-factibilidad-comercial"],
 ];
 
-const TIER_STYLES: Record<
-  ConceptTier,
-  {
-    fontSize: number;
-    textStroke: string;
-    textStrokeWidth: number;
-    dotSize: number;
-    dotStroke: string;
-    dotStrokeWidth: number;
-    textOffsetX: number;
-    textOffsetY: number;
-  }
-> = {
-  hub: {
-    fontSize: 60,
-    textStroke: "#141414",
-    textStrokeWidth: 2,
-    dotSize: 13,
-    dotStroke: "#000000",
-    dotStrokeWidth: 3.4,
-    textOffsetX: 21,
-    textOffsetY: 6,
-  },
-  primary: {
-    fontSize: 41,
-    textStroke: "#595959",
-    textStrokeWidth: 1.5,
-    dotSize: 9,
-    dotStroke: "#555555",
-    dotStrokeWidth: 2.2,
-    textOffsetX: 16,
-    textOffsetY: 4,
-  },
-  sub: {
-    fontSize: 28,
-    textStroke: "#a3a3a3",
-    textStrokeWidth: 1.2,
-    dotSize: 7,
-    dotStroke: "#999999",
-    dotStrokeWidth: 1.8,
-    textOffsetX: 12,
-    textOffsetY: 3,
-  },
-};
+const NODE_POSITIONS = CONCEPT_NODES.map((n) => ({
+  u: (n.x - VIEW_X) / VIEW_W,
+  v: (n.y - VIEW_Y) / VIEW_H,
+}));
 
 const NODE_INDEX = new Map(CONCEPT_NODES.map((node, index) => [node.id, index]));
 
@@ -409,22 +374,74 @@ const RESOLVED_EDGES: Array<[number, number]> = CONCEPT_EDGES.flatMap(
   }
 );
 
-// mapa conceptual animado del mismo ancho que la cabecera de nosotros
+// mapa conceptual con nodos html en gpu y lineas en canvas 2d
 export function ConceptNetwork() {
   const { activeSection } = useCanvas();
   const containerRef = useRef<HTMLElement>(null);
-  const nodeRefs = useRef<Array<SVGGElement | null>>([]);
-  const edgeRefs = useRef<Array<SVGLineElement | null>>([]);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const nodeRefs = useRef<Array<HTMLElement | null>>([]);
   const isVisibleRef = useRef(false);
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return;
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let rafId: number | null = null;
-    const xs = new Float64Array(CONCEPT_NODES.length);
-    const ys = new Float64Array(CONCEPT_NODES.length);
+    let width = 0;
+    let height = 0;
+    let scale = 1;
+    let dpr = 1;
+
+    const pxX = new Float64Array(CONCEPT_NODES.length);
+    const pxY = new Float64Array(CONCEPT_NODES.length);
+
+    const drawLines = () => {
+      if (width <= 0 || height <= 0) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeStyle = "#e2e2e2";
+      ctx.lineWidth = Math.max(1, 1.4 * scale);
+      ctx.beginPath();
+      for (let j = 0; j < RESOLVED_EDGES.length; j++) {
+        const [fromIdx, toIdx] = RESOLVED_EDGES[j];
+        ctx.moveTo(pxX[fromIdx], pxY[fromIdx]);
+        ctx.lineTo(pxX[toIdx], pxY[toIdx]);
+      }
+      ctx.stroke();
+    };
+
+    const renderResting = () => {
+      for (let i = 0; i < CONCEPT_NODES.length; i++) {
+        pxX[i] = NODE_POSITIONS[i].u * width;
+        pxY[i] = NODE_POSITIONS[i].v * height;
+        const el = nodeRefs.current[i];
+        if (el) {
+          el.style.transform = "perspective(800px) translate3d(0, 0, 0.01px)";
+        }
+      }
+      drawLines();
+    };
+
+    const measureCanvas = () => {
+      const rect = container.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      width = rect.width;
+      height = rect.height;
+      scale = width / VIEW_W;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      if (motionQuery.matches) {
+        renderResting();
+      } else {
+        drawLines();
+      }
+    };
 
     const stopLoop = () => {
       if (rafId !== null) {
@@ -448,35 +465,31 @@ export function ConceptNetwork() {
 
       for (let i = 0; i < CONCEPT_NODES.length; i++) {
         const node = CONCEPT_NODES[i];
-        const dx = Math.sin(t * node.freqX + node.phaseX) * node.ampX;
-        const dy = Math.cos(t * node.freqY + node.phaseY) * node.ampY;
-        xs[i] = node.x + dx;
-        ys[i] = node.y + dy;
+        const dx = Math.sin(t * node.freqX + node.phaseX) * node.ampX * scale;
+        const dy = Math.cos(t * node.freqY + node.phaseY) * node.ampY * scale;
+        pxX[i] = NODE_POSITIONS[i].u * width + dx;
+        pxY[i] = NODE_POSITIONS[i].v * height + dy;
 
         const el = nodeRefs.current[i];
         if (el) {
-          el.style.transform = `translate3d(${dx.toFixed(2)}px, ${dy.toFixed(2)}px, 0)`;
+          el.style.transform = `perspective(800px) translate3d(${dx.toFixed(2)}px, ${dy.toFixed(2)}px, 0.01px)`;
         }
       }
 
-      for (let j = 0; j < RESOLVED_EDGES.length; j++) {
-        const line = edgeRefs.current[j];
-        if (!line) continue;
-        const [fromIdx, toIdx] = RESOLVED_EDGES[j];
-        line.setAttribute("x1", xs[fromIdx].toFixed(2));
-        line.setAttribute("y1", ys[fromIdx].toFixed(2));
-        line.setAttribute("x2", xs[toIdx].toFixed(2));
-        line.setAttribute("y2", ys[toIdx].toFixed(2));
-      }
-
+      drawLines();
       rafId = requestAnimationFrame(tick);
     };
 
     const syncLoop = () => {
+      if (motionQuery.matches) {
+        stopLoop();
+        renderResting();
+        return;
+      }
+
       const shouldRun =
         activeSection === "nosotros" &&
         isVisibleRef.current &&
-        !motionQuery.matches &&
         !document.hidden;
 
       if (shouldRun && rafId === null) {
@@ -486,7 +499,12 @@ export function ConceptNetwork() {
       }
     };
 
-    const observer = new IntersectionObserver(
+    const resizeObserver = new ResizeObserver(measureCanvas);
+    resizeObserver.observe(container);
+    measureCanvas();
+    renderResting();
+
+    const intersectionObserver = new IntersectionObserver(
       (entries) => {
         isVisibleRef.current = entries.some((entry) => entry.isIntersecting);
         syncLoop();
@@ -494,106 +512,80 @@ export function ConceptNetwork() {
       { threshold: 0 }
     );
 
-    observer.observe(container);
+    intersectionObserver.observe(container);
     motionQuery.addEventListener("change", syncLoop);
     document.addEventListener("visibilitychange", syncLoop);
     syncLoop();
 
     return () => {
       stopLoop();
-      observer.disconnect();
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
       motionQuery.removeEventListener("change", syncLoop);
       document.removeEventListener("visibilitychange", syncLoop);
     };
   }, [activeSection]);
 
   return (
-    <figure ref={containerRef} className="w-full max-w-[1120px] mx-auto">
-      <svg
-        viewBox="240 130 1490 900"
-        className="w-full h-auto block select-none overflow-visible"
-        role="img"
-        aria-label="Mapa conceptual de arquitectura y construcción 890 ARQ"
-      >
-        {/* lineas de conexion entre nodos */}
-        <g aria-hidden="true">
-          {RESOLVED_EDGES.map(([fromIdx, toIdx], idx) => {
-            const from = CONCEPT_NODES[fromIdx];
-            const to = CONCEPT_NODES[toIdx];
-            return (
-              <line
-                key={`${from.id}-${to.id}`}
-                ref={(el) => {
-                  edgeRefs.current[idx] = el;
-                }}
-                x1={from.x}
-                y1={from.y}
-                x2={to.x}
-                y2={to.y}
-                stroke="#e2e2e2"
-                strokeWidth={1.6}
-                shapeRendering="geometricPrecision"
-              />
-            );
-          })}
-        </g>
+    <figure
+      ref={containerRef}
+      aria-label="Mapa conceptual de arquitectura y construcción 890 ARQ"
+      className="concept-canvas-wrap relative w-full max-w-[1120px] mx-auto aspect-[1490/900] select-none"
+    >
+      {/* capa de lineas de conexion en canvas 2d */}
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full pointer-events-none block"
+      />
 
-        {/* nodos de palabras flotantes preparados para futuros hipervinculos */}
-        {CONCEPT_NODES.map((node, idx) => {
-          const style = TIER_STYLES[node.tier];
-          const halfDot = style.dotSize / 2;
+      {/* capa de nodos tipograficos en gpu preparados para futuros enlaces */}
+      {CONCEPT_NODES.map((node, idx) => {
+        const pos = NODE_POSITIONS[idx];
+        const tierClass = `concept-node concept-node--${node.tier}`;
+        const posStyle: React.CSSProperties = {
+          left: `${(pos.u * 100).toFixed(4)}%`,
+          top: `${(pos.v * 100).toFixed(4)}%`,
+        };
 
-          const content = (
-            <>
-              <rect
-                x={node.x - halfDot}
-                y={node.y - halfDot}
-                width={style.dotSize}
-                height={style.dotSize}
-                fill="#ffffff"
-                stroke={style.dotStroke}
-                strokeWidth={style.dotStrokeWidth}
-              />
-              <text
-                x={node.x + style.textOffsetX}
-                y={node.y + style.textOffsetY}
-                fill="#ffffff"
-                stroke={style.textStroke}
-                strokeWidth={style.textStrokeWidth}
-                strokeLinejoin="round"
-                paintOrder="stroke"
-                fontSize={style.fontSize}
-                fontWeight={500}
-                className="font-mono"
-              >
-                {node.label}
-              </text>
-            </>
-          );
+        const inner = (
+          <>
+            <span aria-hidden="true" className="concept-dot" />
+            <span className="concept-txt font-mono">{node.label}</span>
+          </>
+        );
 
+        if (node.href) {
           return (
-            <g
+            <a
               key={node.id}
               ref={(el) => {
                 nodeRefs.current[idx] = el;
               }}
+              href={node.href}
+              style={posStyle}
               data-concept-node={node.id}
-              className="concept-node"
+              className={`${tierClass} focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2`}
             >
-              {node.href ? (
-                <a
-                  href={node.href}
-                  className="focus-visible:outline-2 focus-visible:outline-black"
-                >
-                  {content}
-                </a>
-              ) : (
-                content
-              )}
-            </g>
+              {inner}
+            </a>
           );
-        })}
-      </svg>
+        }
+
+        return (
+          <span
+            key={node.id}
+            ref={(el) => {
+              nodeRefs.current[idx] = el;
+            }}
+            style={posStyle}
+            data-concept-node={node.id}
+            className={tierClass}
+          >
+            {inner}
+          </span>
+        );
+      })}
 
       <figcaption className="sr-only">
         ARQUITECTURA, CONSTRUCCIÓN, Diseño y gestión, Diseño arquitectónico,

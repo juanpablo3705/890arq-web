@@ -137,21 +137,86 @@ body {
   }
 }
 
-/* nodos del mapa conceptual y hover rojo corporativo */
+/* nodos del mapa conceptual con gpu compositing y hover rojo corporativo */
+.concept-canvas-wrap {
+  container-type: inline-size;
+}
+
 .concept-node {
-  pointer-events: bounding-box;
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
   cursor: pointer;
   will-change: transform;
+  backface-visibility: hidden;
+  transform: perspective(800px) translate3d(0, 0, 0.01px);
 }
 
-.concept-node rect,
-.concept-node text {
-  transition: stroke 180ms ease;
+.concept-dot {
+  display: block;
+  background-color: #ffffff;
+  flex-shrink: 0;
+  transition: border-color 180ms ease;
 }
 
-.concept-node:hover rect,
-.concept-node:hover text,
-.concept-node:focus-within rect,
-.concept-node:focus-within text {
-  stroke: #e60000;
+.concept-txt {
+  font-weight: 500;
+  line-height: 1;
+  color: #ffffff;
+  paint-order: stroke fill;
+  -webkit-text-fill-color: #ffffff;
+  transition: -webkit-text-stroke-color 180ms ease;
+}
+
+.concept-node--hub {
+  gap: 0.56cqi;
+  translate: -0.44cqi -50%;
+}
+.concept-node--hub .concept-dot {
+  width: 0.88cqi;
+  height: 0.88cqi;
+  border: 0.22cqi solid #000000;
+}
+.concept-node--hub .concept-txt {
+  font-size: 4.02cqi;
+  -webkit-text-stroke: 0.14cqi #141414;
+}
+
+.concept-node--primary {
+  gap: 0.48cqi;
+  translate: -0.31cqi -50%;
+}
+.concept-node--primary .concept-dot {
+  width: 0.62cqi;
+  height: 0.62cqi;
+  border: 0.15cqi solid #555555;
+}
+.concept-node--primary .concept-txt {
+  font-size: 2.75cqi;
+  -webkit-text-stroke: 0.11cqi #525252;
+}
+
+.concept-node--sub {
+  gap: 0.42cqi;
+  translate: -0.24cqi -50%;
+}
+.concept-node--sub .concept-dot {
+  width: 0.48cqi;
+  height: 0.48cqi;
+  border: 0.12cqi solid #999999;
+}
+.concept-node--sub .concept-txt {
+  font-size: 1.88cqi;
+  -webkit-text-stroke: 0.09cqi #949494;
+}
+
+.concept-node:hover .concept-dot,
+.concept-node:focus-within .concept-dot {
+  border-color: #e60000;
+}
+
+.concept-node:hover .concept-txt,
+.concept-node:focus-within .concept-txt {
+  -webkit-text-stroke-color: #e60000;
 }
