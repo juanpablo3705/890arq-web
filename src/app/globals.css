@@ -136,3 +136,11 @@ body {
     transition-duration: 0.2s;
   }
 }
+
+/* enlaces futuros en el mapa conceptual */
+.concept-node-link:hover rect,
+.concept-node-link:hover text,
+.concept-node-link:focus-visible rect,
+.concept-node-link:focus-visible text {
+  stroke: #e60000;
+}

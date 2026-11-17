@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { ConceptNetwork } from "./ConceptNetwork";
 
 // datos de los 5 pilares de servicios
 const SERVICE_PILLARS = [
@@ -207,25 +208,9 @@ export function NosotrosSection() {
           </p>
         </div>
 
-        {/* mapa conceptual arquitectonico */}
+        {/* mapa conceptual arquitectonico animado */}
         <div className="w-full flex flex-col items-center justify-center">
-          <figure className="w-full max-w-[820px] mx-auto">
-            <img
-              src="/images/IMAGENES-WEB-01-2048x1152.jpg"
-              alt="Mapa conceptual de arquitectura y construcción 890 ARQ"
-              className="w-full h-auto object-contain select-none"
-            />
-            <figcaption className="sr-only">
-              ARQUITECTURA, CONSTRUCCIÓN, Diseño y gestión, Diseño
-              arquitectónico, Planificación, Gestión inmobiliaria, Ejecución de
-              obra, Planificación de obra, Gestión construcción, Supervisión
-              técnica, Remodelaciones, Remodelación parcial, Remodelación total,
-              Tasación, Cambio uso de suelo, Tasación comercial, Subdivisión /
-              Loteos / Fusión, Estudio de cabida, Tramitación municipal,
-              Patentes comerciales, Permiso de obra nueva, Consultoría/Asesoría,
-              Estudio de factibilidad comercial.
-            </figcaption>
-          </figure>
+          <ConceptNetwork />
         </div>
 
         {/* pilares de servicios */}
