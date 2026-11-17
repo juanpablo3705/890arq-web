@@ -29,7 +29,7 @@ function CrossButton({ label, target, onNavigate }: CrossButtonProps) {
   );
 }
 
-// vista central home con navegacion en cruz y logo estatico
+// vista central home con navegacion en cruz y logo con oleaje
 export function HomeSection() {
   const { navigateTo } = useCanvas();
 
@@ -48,7 +48,7 @@ export function HomeSection() {
           />
         </div>
 
-        {/* fila central: contacto (oeste), logo estatico (centro), nosotros (este) */}
+        {/* fila central: contacto (oeste), logo central (centro), nosotros (este) */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-y-3 sm:gap-y-0 sm:gap-x-5 md:gap-x-12 lg:gap-x-[97.5px]">
           <CrossButton
             label="Contacto"
@@ -56,14 +56,26 @@ export function HomeSection() {
             onNavigate={navigateTo}
           />
 
-          {/* recuadro central con logo 890 / arq estatico sin sombra */}
+          {/* recuadro central con logo 890 / arq y vaiven por letra */}
           <div className="w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] md:w-[152px] md:h-[152px] border-[4px] border-black bg-white flex flex-col items-center justify-center select-none shrink-0 my-1 sm:my-0">
-            <span className="font-mono text-[1.25rem] md:text-[1.375rem] leading-[0.85] font-medium text-black">
-              890
+            <span className="sr-only">890</span>
+            <span
+              aria-hidden="true"
+              className="logo-wave-top font-mono text-[1.25rem] md:text-[1.375rem] leading-[0.85] font-medium text-black"
+            >
+              <span>8</span>
+              <span>9</span>
+              <span>0</span>
             </span>
             <span className="w-20 md:w-[96px] h-[4px] bg-black my-3 md:my-[14px]" />
-            <span className="font-mono text-[1.25rem] md:text-[1.375rem] leading-[0.85] font-medium text-black">
-              ARQ
+            <span className="sr-only">ARQ</span>
+            <span
+              aria-hidden="true"
+              className="logo-wave-bottom font-mono text-[1.25rem] md:text-[1.375rem] leading-[0.85] font-medium text-black"
+            >
+              <span>A</span>
+              <span>R</span>
+              <span>Q</span>
             </span>
           </div>
 
