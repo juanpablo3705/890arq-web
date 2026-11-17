@@ -10,18 +10,18 @@ interface CrossButtonProps {
   onNavigate: (target: SectionId) => void;
 }
 
-// boton de navegacion con sombra desplazada estilo 890 arq
+// boton en cruz con recuadro desplazado 15px abajo a la derecha
 function CrossButton({ label, target, onNavigate }: CrossButtonProps) {
   return (
-    <div className="relative inline-block group">
+    <div className="relative inline-block pb-[15px] pr-[15px] group">
       <div
         aria-hidden="true"
-        className="absolute inset-0 translate-x-1.5 translate-y-1.5 border border-black bg-transparent pointer-events-none transition-colors duration-200 group-hover:border-[#E60000]"
+        className="absolute top-[15px] left-[15px] w-[170px] h-[55px] border border-black bg-transparent pointer-events-none transition-colors duration-200 group-hover:border-[#E60000]"
       />
       <button
         type="button"
         onClick={() => onNavigate(target)}
-        className="relative z-10 w-[148px] sm:w-[172px] h-[50px] sm:h-[54px] border-2 border-black bg-white font-mono text-[13px] font-bold tracking-tight text-black flex items-center justify-center cursor-pointer transition-colors duration-200 group-hover:bg-[#E60000] group-hover:border-[#E60000] group-hover:text-white"
+        className="relative z-10 w-[170px] min-h-[55px] border-[3px] border-black bg-white font-mono text-[0.875rem] leading-none font-bold text-black whitespace-nowrap flex items-center justify-center cursor-pointer transition-colors duration-200 group-hover:bg-[#E60000] group-hover:border-[#E60000] group-hover:text-white"
       >
         <span>{label} &gt;</span>
       </button>
@@ -29,7 +29,7 @@ function CrossButton({ label, target, onNavigate }: CrossButtonProps) {
   );
 }
 
-// vista central home con navegacion en cruz y logo fijo
+// vista central home con navegacion en cruz y logo estatico
 export function HomeSection() {
   const { navigateTo } = useCanvas();
 
@@ -38,7 +38,7 @@ export function HomeSection() {
       aria-label="Inicio 890 ARQ"
       className="w-full h-full flex items-center justify-center bg-white px-4"
     >
-      <div className="flex flex-col items-center justify-center gap-y-10 sm:gap-y-16 -mt-4">
+      <div className="flex flex-col items-center justify-center gap-y-2.5 sm:gap-y-[65px] -translate-y-4 sm:translate-y-0 lg:-translate-y-[38px]">
         {/* brazo norte: proyectos */}
         <div>
           <CrossButton
@@ -49,28 +49,22 @@ export function HomeSection() {
         </div>
 
         {/* fila central: contacto (oeste), logo estatico (centro), nosotros (este) */}
-        <div className="flex items-center justify-center gap-x-4 sm:gap-x-12 md:gap-x-24">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-y-3 sm:gap-y-0 sm:gap-x-5 md:gap-x-12 lg:gap-x-[97.5px]">
           <CrossButton
             label="Contacto"
             target="contacto"
             onNavigate={navigateTo}
           />
 
-          {/* recuadro central con logo 890 / arq en texto estatico */}
-          <div className="relative inline-block">
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 translate-x-1.5 translate-y-1.5 border border-black bg-transparent pointer-events-none"
-            />
-            <div className="relative z-10 w-[132px] h-[132px] sm:w-[152px] sm:h-[152px] border-[3.5px] border-black bg-white flex flex-col items-center justify-center select-none">
-              <span className="font-mono text-[22px] leading-none font-semibold tracking-wider text-black">
-                890
-              </span>
-              <span className="w-20 sm:w-24 h-[3.5px] bg-black my-3.5" />
-              <span className="font-mono text-[22px] leading-none font-semibold tracking-wider text-black">
-                ARQ
-              </span>
-            </div>
+          {/* recuadro central con logo 890 / arq estatico sin sombra */}
+          <div className="w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] md:w-[152px] md:h-[152px] border-[4px] border-black bg-white flex flex-col items-center justify-center select-none shrink-0 my-1 sm:my-0">
+            <span className="font-mono text-[1.25rem] md:text-[1.375rem] leading-[0.85] font-medium text-black">
+              890
+            </span>
+            <span className="w-20 md:w-[96px] h-[4px] bg-black my-3 md:my-[14px]" />
+            <span className="font-mono text-[1.25rem] md:text-[1.375rem] leading-[0.85] font-medium text-black">
+              ARQ
+            </span>
           </div>
 
           <CrossButton
