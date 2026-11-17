@@ -3,7 +3,7 @@
 import React from "react";
 import { useCanvas } from "./CanvasContext";
 
-// marco fijo con logo superior, redes en l y creditos inferiores
+// marco fijo con logo superior y redes en l
 export function UIFrame() {
   const { goHome } = useCanvas();
 
@@ -122,15 +122,6 @@ export function UIFrame() {
           </a>
         </div>
       </div>
-
-      {/* pie de pagina inferior centrado */}
-      <footer className="fixed bottom-4 left-4 right-[104px] sm:right-auto sm:bottom-[26px] sm:left-1/2 sm:-translate-x-1/2 z-40 pointer-events-none sm:w-full sm:px-4 text-left sm:text-center">
-        <p className="font-mono text-[10px] sm:text-xs leading-snug sm:leading-none font-normal text-[#737373]">
-          v2.0 | Diseño UI:{" "}
-          <span className="text-black">Gabriela Zett</span> • Desarrollo Web:{" "}
-          <span className="text-black">Juan Pablo Oyanedel</span>
-        </p>
-      </footer>
     </>
   );
 }

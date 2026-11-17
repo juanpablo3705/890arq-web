@@ -87,7 +87,7 @@ export function NosotrosSection() {
   return (
     <section
       aria-label="Nosotros 890 ARQ"
-      className="w-full min-h-screen bg-white pt-32 pb-36 px-6 md:px-16"
+      className="w-full min-h-screen bg-white pt-32 pb-24 sm:pb-12 px-6 md:px-16"
     >
       <div className="w-full max-w-[1140px] mx-auto flex flex-col gap-28 md:gap-36">
         {/* bloque nosotros */}
@@ -240,6 +240,13 @@ export function NosotrosSection() {
           </div>
         </div>
       </div>
+
+      {/* linea final de creditos al cierre de nosotros */}
+      <p className="mt-24 md:mt-32 text-center font-mono text-[11px] sm:text-xs font-normal text-[#737373] sm:px-24">
+        v2.0 | Diseño UI:{" "}
+        <span className="text-black">Gabriela Zett</span> • Desarrollo Web:{" "}
+        <span className="text-black">Juan Pablo Oyanedel</span>
+      </p>
     </section>
   );
 }
