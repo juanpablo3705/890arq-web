@@ -41,7 +41,7 @@ export function SpatialCanvas() {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-white">
       <div
-        className={`relative w-screen h-screen transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${SECTION_TRANSFORMS[activeSection]}`}
+        className={`relative w-screen h-screen transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${SECTION_TRANSFORMS[activeSection]}`}
       >
         {/* centro (0, 0): home */}
         <div className="absolute top-0 left-0 w-screen h-screen overflow-hidden">

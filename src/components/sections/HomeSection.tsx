@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { SectionId } from "@/types/domain";
 import { useCanvas } from "@/components/canvas/CanvasContext";
 
@@ -31,7 +31,22 @@ function CrossButton({ label, target, onNavigate }: CrossButtonProps) {
 
 // vista central home con navegacion en cruz y logo con oleaje
 export function HomeSection() {
-  const { navigateTo } = useCanvas();
+  const { activeSection, navigateTo } = useCanvas();
+  const logoBoxRef = useRef<HTMLDivElement>(null);
+
+  // pausa el oleaje cuando home sale de pantalla para ahorrar gpu
+  useEffect(() => {
+    const node = logoBoxRef.current;
+    if (!node) return;
+    if (activeSection === "home") {
+      node.classList.remove("logo-wave-paused");
+      return;
+    }
+    const timer = setTimeout(() => {
+      node.classList.add("logo-wave-paused");
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [activeSection]);
 
   return (
     <section
@@ -57,7 +72,10 @@ export function HomeSection() {
           />
 
           {/* recuadro central con logo 890 / arq y vaiven por letra */}
-          <div className="w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] md:w-[152px] md:h-[152px] border-[4px] border-black bg-white flex flex-col items-center justify-center select-none shrink-0 my-1 sm:my-0">
+          <div
+            ref={logoBoxRef}
+            className="w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] md:w-[152px] md:h-[152px] border-[4px] border-black bg-white flex flex-col items-center justify-center select-none shrink-0 my-1 sm:my-0"
+          >
             <span className="sr-only">890</span>
             <span
               aria-hidden="true"
