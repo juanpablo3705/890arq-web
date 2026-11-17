@@ -89,8 +89,8 @@ const TEAM_MEMBERS = [
     src: "/images/img890-jp-1.png",
     alt: "Juan Pablo Oyanedel",
     name: "Juan Pablo Oyanedel",
-    credentials: ["Periodista PUCV"],
-    role: "Comunicación Organizacional",
+    credentials: ["Analista Programador"],
+    role: "Desarrollador web",
   },
 ];
 
@@ -165,18 +165,18 @@ export function NosotrosSection() {
                     />
                   </span>
                   <span className="flip-card-back font-mono">
-                    <span className="block text-[1.25rem] sm:text-[1.5rem] leading-[1.2] font-medium mt-2 mb-4">
+                    <span className="block text-[0.75rem] sm:text-[0.9rem] leading-[1.2] font-medium mt-1 mb-2.5">
                       {member.name}
                     </span>
                     {member.credentials.map((cred) => (
                       <span
                         key={cred}
-                        className="block text-[0.875rem] sm:text-[1rem] leading-[1.5] font-normal mb-[0.9rem]"
+                        className="block text-[0.525rem] sm:text-[0.6rem] leading-[1.5] font-normal mb-2"
                       >
                         {cred}
                       </span>
                     ))}
-                    <span className="block text-[1.125rem] sm:text-[1.25rem] leading-[1.2] font-medium mt-2 mb-4">
+                    <span className="block text-[0.675rem] sm:text-[0.75rem] leading-[1.2] font-medium mt-1 mb-2.5">
                       {member.role}
                     </span>
                   </span>
