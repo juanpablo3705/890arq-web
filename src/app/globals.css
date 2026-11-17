@@ -180,7 +180,7 @@ body {
 }
 .concept-node--hub .concept-txt {
   font-size: 4.02cqi;
-  -webkit-text-stroke: 0.14cqi #141414;
+  -webkit-text-stroke: 0.161cqi #000000;
 }
 
 .concept-node--primary {
@@ -190,11 +190,11 @@ body {
 .concept-node--primary .concept-dot {
   width: 0.62cqi;
   height: 0.62cqi;
-  border: 0.15cqi solid #555555;
+  border: 0.15cqi solid #242424;
 }
 .concept-node--primary .concept-txt {
   font-size: 2.75cqi;
-  -webkit-text-stroke: 0.11cqi #525252;
+  -webkit-text-stroke: 0.1265cqi #242424;
 }
 
 .concept-node--sub {
@@ -204,11 +204,11 @@ body {
 .concept-node--sub .concept-dot {
   width: 0.48cqi;
   height: 0.48cqi;
-  border: 0.12cqi solid #999999;
+  border: 0.12cqi solid #454545;
 }
 .concept-node--sub .concept-txt {
   font-size: 1.88cqi;
-  -webkit-text-stroke: 0.09cqi #949494;
+  -webkit-text-stroke: 0.1035cqi #454545;
 }
 
 .concept-node:hover .concept-dot,
