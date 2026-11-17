@@ -165,18 +165,18 @@ export function NosotrosSection() {
                     />
                   </span>
                   <span className="flip-card-back font-mono">
-                    <span className="block text-[0.75rem] sm:text-[0.9rem] leading-[1.2] font-medium mt-1 mb-2.5">
+                    <span className="block text-[1rem] sm:text-[1.2rem] leading-[1.2] font-medium mt-1.5 mb-3">
                       {member.name}
                     </span>
                     {member.credentials.map((cred) => (
                       <span
                         key={cred}
-                        className="block text-[0.525rem] sm:text-[0.6rem] leading-[1.5] font-normal mb-2"
+                        className="block text-[0.7rem] sm:text-[0.8rem] leading-[1.5] font-normal mb-3"
                       >
                         {cred}
                       </span>
                     ))}
-                    <span className="block text-[0.675rem] sm:text-[0.75rem] leading-[1.2] font-medium mt-1 mb-2.5">
+                    <span className="block text-[0.9rem] sm:text-[1rem] leading-[1.2] font-medium mt-1.5 mb-3">
                       {member.role}
                     </span>
                   </span>
