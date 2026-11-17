@@ -114,6 +114,7 @@ export function NosotrosSection() {
           <img
             src="/images/OFI.D-1024x683.jpeg"
             alt="Oficina de arquitectura 890 ARQ"
+            decoding="async"
             className="w-full h-auto aspect-[3/2] object-cover grayscale"
           />
         </div>
@@ -162,6 +163,7 @@ export function NosotrosSection() {
                     <img
                       src={member.src}
                       alt={member.alt}
+                      decoding="async"
                       className="w-full h-full object-cover grayscale"
                     />
                   </span>

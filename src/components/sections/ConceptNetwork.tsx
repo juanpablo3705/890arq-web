@@ -13,7 +13,7 @@ export interface ConceptNode {
   tier: ConceptTier;
   // espacio reservado para futuros enlaces por palabra
   href?: string;
-  // parametros individuales para el vaiven suave en la red
+  // parametros individuales para flotacion lenta (+50% rango, -45% velocidad)
   ampX: number;
   ampY: number;
   freqX: number;
@@ -29,10 +29,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 317,
     y: 221,
     tier: "sub",
-    ampX: 2.8,
-    ampY: 3.4,
-    freqX: 1.68,
-    freqY: 2.15,
+    ampX: 4.2,
+    ampY: 5.1,
+    freqX: 0.92,
+    freqY: 1.18,
     phaseX: 0.4,
     phaseY: 1.1,
   },
@@ -42,10 +42,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 372,
     y: 307,
     tier: "primary",
-    ampX: 3.1,
-    ampY: 3.8,
-    freqX: 1.58,
-    freqY: 1.98,
+    ampX: 4.65,
+    ampY: 5.7,
+    freqX: 0.87,
+    freqY: 1.09,
     phaseX: 1.2,
     phaseY: 2.3,
   },
@@ -55,10 +55,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 796,
     y: 247,
     tier: "sub",
-    ampX: 2.7,
-    ampY: 3.5,
-    freqX: 1.88,
-    freqY: 1.62,
+    ampX: 4.05,
+    ampY: 5.25,
+    freqX: 1.03,
+    freqY: 0.89,
     phaseX: 2.1,
     phaseY: 0.7,
   },
@@ -68,10 +68,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 660,
     y: 382,
     tier: "sub",
-    ampX: 3.0,
-    ampY: 3.3,
-    freqX: 1.76,
-    freqY: 2.09,
+    ampX: 4.5,
+    ampY: 4.95,
+    freqX: 0.97,
+    freqY: 1.15,
     phaseX: 3.0,
     phaseY: 1.9,
   },
@@ -81,10 +81,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1146,
     y: 208,
     tier: "primary",
-    ampX: 3.3,
-    ampY: 3.7,
-    freqX: 1.52,
-    freqY: 1.84,
+    ampX: 4.95,
+    ampY: 5.55,
+    freqX: 0.84,
+    freqY: 1.01,
     phaseX: 0.8,
     phaseY: 3.4,
   },
@@ -94,10 +94,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1350,
     y: 254,
     tier: "sub",
-    ampX: 2.9,
-    ampY: 3.2,
-    freqX: 2.02,
-    freqY: 1.66,
+    ampX: 4.35,
+    ampY: 4.8,
+    freqX: 1.11,
+    freqY: 0.91,
     phaseX: 4.1,
     phaseY: 2.7,
   },
@@ -107,10 +107,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 991,
     y: 338,
     tier: "sub",
-    ampX: 2.7,
-    ampY: 3.4,
-    freqX: 1.72,
-    freqY: 2.19,
+    ampX: 4.05,
+    ampY: 5.1,
+    freqX: 0.95,
+    freqY: 1.2,
     phaseX: 1.9,
     phaseY: 4.5,
   },
@@ -120,10 +120,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1322,
     y: 364,
     tier: "sub",
-    ampX: 2.9,
-    ampY: 3.5,
-    freqX: 1.64,
-    freqY: 1.93,
+    ampX: 4.35,
+    ampY: 5.25,
+    freqX: 0.9,
+    freqY: 1.06,
     phaseX: 2.8,
     phaseY: 0.3,
   },
@@ -133,10 +133,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1182,
     y: 438,
     tier: "primary",
-    ampX: 3.2,
-    ampY: 3.8,
-    freqX: 1.59,
-    freqY: 2.04,
+    ampX: 4.8,
+    ampY: 5.7,
+    freqX: 0.87,
+    freqY: 1.12,
     phaseX: 5.1,
     phaseY: 1.4,
   },
@@ -146,10 +146,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 366,
     y: 494,
     tier: "sub",
-    ampX: 2.8,
-    ampY: 3.3,
-    freqX: 1.83,
-    freqY: 1.55,
+    ampX: 4.2,
+    ampY: 4.95,
+    freqX: 1.01,
+    freqY: 0.85,
     phaseX: 3.6,
     phaseY: 5.2,
   },
@@ -159,10 +159,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 914,
     y: 514,
     tier: "sub",
-    ampX: 2.7,
-    ampY: 3.4,
-    freqX: 1.95,
-    freqY: 1.71,
+    ampX: 4.05,
+    ampY: 5.1,
+    freqX: 1.07,
+    freqY: 0.94,
     phaseX: 0.2,
     phaseY: 3.9,
   },
@@ -172,10 +172,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 458,
     y: 583,
     tier: "hub",
-    ampX: 2.5,
-    ampY: 3.2,
-    freqX: 1.46,
-    freqY: 1.82,
+    ampX: 3.75,
+    ampY: 4.8,
+    freqX: 0.8,
+    freqY: 1.0,
     phaseX: 1.5,
     phaseY: 0.6,
   },
@@ -185,10 +185,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1108,
     y: 582,
     tier: "hub",
-    ampX: 2.5,
-    ampY: 3.2,
-    freqX: 1.51,
-    freqY: 1.74,
+    ampX: 3.75,
+    ampY: 4.8,
+    freqX: 0.83,
+    freqY: 0.96,
     phaseX: 3.9,
     phaseY: 2.1,
   },
@@ -198,10 +198,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 994,
     y: 642,
     tier: "sub",
-    ampX: 2.8,
-    ampY: 3.3,
-    freqX: 1.99,
-    freqY: 1.63,
+    ampX: 4.2,
+    ampY: 4.95,
+    freqX: 1.09,
+    freqY: 0.9,
     phaseX: 2.4,
     phaseY: 4.8,
   },
@@ -211,10 +211,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 305,
     y: 715,
     tier: "sub",
-    ampX: 2.9,
-    ampY: 3.4,
-    freqX: 1.66,
-    freqY: 2.01,
+    ampX: 4.35,
+    ampY: 5.1,
+    freqX: 0.91,
+    freqY: 1.11,
     phaseX: 4.7,
     phaseY: 1.6,
   },
@@ -224,10 +224,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 814,
     y: 694,
     tier: "primary",
-    ampX: 3.1,
-    ampY: 3.6,
-    freqX: 1.54,
-    freqY: 1.91,
+    ampX: 4.65,
+    ampY: 5.4,
+    freqX: 0.85,
+    freqY: 1.05,
     phaseX: 5.5,
     phaseY: 3.1,
   },
@@ -237,10 +237,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1394,
     y: 684,
     tier: "sub",
-    ampX: 2.8,
-    ampY: 3.5,
-    freqX: 1.81,
-    freqY: 2.13,
+    ampX: 4.2,
+    ampY: 5.25,
+    freqX: 1.0,
+    freqY: 1.17,
     phaseX: 1.1,
     phaseY: 5.7,
   },
@@ -250,10 +250,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1004,
     y: 738,
     tier: "sub",
-    ampX: 2.7,
-    ampY: 3.3,
-    freqX: 1.92,
-    freqY: 1.59,
+    ampX: 4.05,
+    ampY: 4.95,
+    freqX: 1.06,
+    freqY: 0.87,
     phaseX: 3.3,
     phaseY: 0.9,
   },
@@ -263,10 +263,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 676,
     y: 822,
     tier: "sub",
-    ampX: 2.9,
-    ampY: 3.5,
-    freqX: 1.74,
-    freqY: 1.97,
+    ampX: 4.35,
+    ampY: 5.25,
+    freqX: 0.96,
+    freqY: 1.08,
     phaseX: 0.6,
     phaseY: 2.9,
   },
@@ -276,10 +276,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1081,
     y: 850,
     tier: "sub",
-    ampX: 2.6,
-    ampY: 3.3,
-    freqX: 2.05,
-    freqY: 1.73,
+    ampX: 3.9,
+    ampY: 4.95,
+    freqX: 1.13,
+    freqY: 0.95,
     phaseX: 4.3,
     phaseY: 4.1,
   },
@@ -289,10 +289,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 438,
     y: 896,
     tier: "primary",
-    ampX: 3.2,
-    ampY: 3.7,
-    freqX: 1.53,
-    freqY: 1.89,
+    ampX: 4.8,
+    ampY: 5.55,
+    freqX: 0.84,
+    freqY: 1.04,
     phaseX: 2.2,
     phaseY: 5.0,
   },
@@ -302,10 +302,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 320,
     y: 963,
     tier: "sub",
-    ampX: 2.8,
-    ampY: 3.4,
-    freqX: 1.79,
-    freqY: 2.11,
+    ampX: 4.2,
+    ampY: 5.1,
+    freqX: 0.98,
+    freqY: 1.16,
     phaseX: 5.8,
     phaseY: 1.3,
   },
@@ -315,10 +315,10 @@ const CONCEPT_NODES: ConceptNode[] = [
     x: 1198,
     y: 946,
     tier: "primary",
-    ampX: 3.1,
-    ampY: 3.6,
-    freqX: 1.61,
-    freqY: 1.96,
+    ampX: 4.65,
+    ampY: 5.4,
+    freqX: 0.89,
+    freqY: 1.08,
     phaseX: 1.7,
     phaseY: 3.6,
   },
@@ -399,7 +399,17 @@ const TIER_STYLES: Record<
 
 const NODE_INDEX = new Map(CONCEPT_NODES.map((node, index) => [node.id, index]));
 
-// mapa conceptual animado con nodos listos para futuros enlaces
+// indices precalculados para evitar busquedas por frame
+const RESOLVED_EDGES: Array<[number, number]> = CONCEPT_EDGES.flatMap(
+  ([fromId, toId]) => {
+    const fromIdx = NODE_INDEX.get(fromId);
+    const toIdx = NODE_INDEX.get(toId);
+    if (fromIdx === undefined || toIdx === undefined) return [];
+    return [[fromIdx, toIdx]];
+  }
+);
+
+// mapa conceptual animado del mismo ancho que la cabecera de nosotros
 export function ConceptNetwork() {
   const { activeSection } = useCanvas();
   const containerRef = useRef<HTMLElement>(null);
@@ -413,7 +423,8 @@ export function ConceptNetwork() {
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let rafId: number | null = null;
-    const coords = CONCEPT_NODES.map((n) => ({ x: n.x, y: n.y }));
+    const xs = new Float64Array(CONCEPT_NODES.length);
+    const ys = new Float64Array(CONCEPT_NODES.length);
 
     const stopLoop = () => {
       if (rafId !== null) {
@@ -439,30 +450,23 @@ export function ConceptNetwork() {
         const node = CONCEPT_NODES[i];
         const dx = Math.sin(t * node.freqX + node.phaseX) * node.ampX;
         const dy = Math.cos(t * node.freqY + node.phaseY) * node.ampY;
-        coords[i].x = node.x + dx;
-        coords[i].y = node.y + dy;
+        xs[i] = node.x + dx;
+        ys[i] = node.y + dy;
 
         const el = nodeRefs.current[i];
         if (el) {
-          el.setAttribute(
-            "transform",
-            `translate(${dx.toFixed(2)} ${dy.toFixed(2)})`
-          );
+          el.style.transform = `translate3d(${dx.toFixed(2)}px, ${dy.toFixed(2)}px, 0)`;
         }
       }
 
-      for (let j = 0; j < CONCEPT_EDGES.length; j++) {
+      for (let j = 0; j < RESOLVED_EDGES.length; j++) {
         const line = edgeRefs.current[j];
         if (!line) continue;
-        const [fromId, toId] = CONCEPT_EDGES[j];
-        const fromIdx = NODE_INDEX.get(fromId);
-        const toIdx = NODE_INDEX.get(toId);
-        if (fromIdx === undefined || toIdx === undefined) continue;
-
-        line.setAttribute("x1", coords[fromIdx].x.toFixed(2));
-        line.setAttribute("y1", coords[fromIdx].y.toFixed(2));
-        line.setAttribute("x2", coords[toIdx].x.toFixed(2));
-        line.setAttribute("y2", coords[toIdx].y.toFixed(2));
+        const [fromIdx, toIdx] = RESOLVED_EDGES[j];
+        line.setAttribute("x1", xs[fromIdx].toFixed(2));
+        line.setAttribute("y1", ys[fromIdx].toFixed(2));
+        line.setAttribute("x2", xs[toIdx].toFixed(2));
+        line.setAttribute("y2", ys[toIdx].toFixed(2));
       }
 
       rafId = requestAnimationFrame(tick);
@@ -504,24 +508,21 @@ export function ConceptNetwork() {
   }, [activeSection]);
 
   return (
-    <figure ref={containerRef} className="w-full max-w-[820px] mx-auto">
+    <figure ref={containerRef} className="w-full max-w-[1120px] mx-auto">
       <svg
-        viewBox="0 0 2048 1152"
+        viewBox="240 130 1490 900"
         className="w-full h-auto block select-none overflow-visible"
         role="img"
         aria-label="Mapa conceptual de arquitectura y construcción 890 ARQ"
       >
         {/* lineas de conexion entre nodos */}
         <g aria-hidden="true">
-          {CONCEPT_EDGES.map(([fromId, toId], idx) => {
-            const fromIdx = NODE_INDEX.get(fromId);
-            const toIdx = NODE_INDEX.get(toId);
-            if (fromIdx === undefined || toIdx === undefined) return null;
+          {RESOLVED_EDGES.map(([fromIdx, toIdx], idx) => {
             const from = CONCEPT_NODES[fromIdx];
             const to = CONCEPT_NODES[toIdx];
             return (
               <line
-                key={`${fromId}-${toId}`}
+                key={`${from.id}-${to.id}`}
                 ref={(el) => {
                   edgeRefs.current[idx] = el;
                 }}
@@ -531,6 +532,7 @@ export function ConceptNetwork() {
                 y2={to.y}
                 stroke="#e2e2e2"
                 strokeWidth={1.6}
+                shapeRendering="geometricPrecision"
               />
             );
           })}
@@ -555,7 +557,7 @@ export function ConceptNetwork() {
               <text
                 x={node.x + style.textOffsetX}
                 y={node.y + style.textOffsetY}
-                fill="rgba(255, 255, 255, 0.88)"
+                fill="#ffffff"
                 stroke={style.textStroke}
                 strokeWidth={style.textStrokeWidth}
                 strokeLinejoin="round"
@@ -576,11 +578,12 @@ export function ConceptNetwork() {
                 nodeRefs.current[idx] = el;
               }}
               data-concept-node={node.id}
+              className="concept-node"
             >
               {node.href ? (
                 <a
                   href={node.href}
-                  className="concept-node-link cursor-pointer focus-visible:outline-2 focus-visible:outline-black"
+                  className="focus-visible:outline-2 focus-visible:outline-black"
                 >
                   {content}
                 </a>

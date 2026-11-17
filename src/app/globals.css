@@ -137,10 +137,21 @@ body {
   }
 }
 
-/* enlaces futuros en el mapa conceptual */
-.concept-node-link:hover rect,
-.concept-node-link:hover text,
-.concept-node-link:focus-visible rect,
-.concept-node-link:focus-visible text {
+/* nodos del mapa conceptual y hover rojo corporativo */
+.concept-node {
+  pointer-events: bounding-box;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.concept-node rect,
+.concept-node text {
+  transition: stroke 180ms ease;
+}
+
+.concept-node:hover rect,
+.concept-node:hover text,
+.concept-node:focus-within rect,
+.concept-node:focus-within text {
   stroke: #e60000;
 }
