@@ -1,9 +1,17 @@
 import type { NextConfig } from "next";
 
+// configuracion principal de next con soporte para imagenes de supabase
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+      },
+    ],
+  },
   turbopack: {
     rules: {
       "*.css": {
