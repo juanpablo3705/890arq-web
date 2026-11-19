@@ -7,7 +7,7 @@ export function CotizacionesSection() {
   return (
     <section
       aria-label="Cotizaciones 890 ARQ"
-      className="w-full min-h-screen bg-white"
+      className="site-section"
     />
   );
 }

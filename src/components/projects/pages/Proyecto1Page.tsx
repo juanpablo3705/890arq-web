@@ -1,84 +1,82 @@
 "use client";
 
 import React from "react";
+import {
+  getProjectMeta,
+  ProjectFooterBar,
+  ProjectTitle,
+  ProjectTopBar,
+  ProjectVerticalTag,
+} from "../ProjectDetailChrome";
 
 interface ProyectoPageProps {
   onBack: () => void;
 }
 
-// pagina individual de diseno libre para proyecto 1 (editorial panoramica + isometria)
+// pagina individual proyecto 1: apertura panoramica + ficha tecnica + axonometria
 export function Proyecto1Page({ onBack }: ProyectoPageProps) {
-  return (
-    <article className="w-full max-w-[1080px] mx-auto font-mono text-black">
-      {/* barra superior con boton discreto para volver a la grilla */}
-      <div className="flex items-center justify-between border-b border-black pb-4 mb-10">
-        <button
-          type="button"
-          onClick={onBack}
-          className="text-xs md:text-[13px] font-mono text-black hover:text-[#E60000] transition-colors cursor-pointer inline-flex items-center gap-1.5"
-        >
-          <span>&lt; Volver a proyectos</span>
-        </button>
-        <span className="border border-black px-2 py-1 text-xs font-mono">
-          01
-        </span>
-      </div>
+  const { project, theme } = getProjectMeta("proyecto-1");
 
-      {/* encabezado editorial */}
-      <header className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-6 items-end mb-10">
-        <div>
-          <p className="text-[11px] uppercase tracking-widest text-neutral-500 mb-2">
-            Arquitectura / Región de Valparaíso
+  return (
+    <article className="w-full font-mono text-black">
+      <ProjectTopBar project={project} theme={theme} onBack={onBack} />
+
+      {/* encabezado editorial alineado al riel izquierdo */}
+      <header className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end mb-10">
+        <div className="md:col-span-7">
+          <p className="text-[11px] uppercase tracking-[0.04em] text-[#737373] mb-2">
+            {project.category} · {project.location}
           </p>
-          <h1 className="text-2xl md:text-4xl font-bold tracking-tight uppercase">
-            Proyecto 1
-          </h1>
+          <ProjectTitle project={project} />
         </div>
-        <p className="text-xs leading-relaxed text-justify border-l-2 border-black pl-4">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        <p className="md:col-span-5 text-xs leading-[1.6] border-l-2 border-black pl-4">
+          {project.excerpt}
         </p>
       </header>
 
-      {/* imagen principal panoramica */}
-      <div className="w-full border border-black overflow-hidden mb-10 bg-neutral-100">
-        <img
-          src="/images/Casa-Camino-del-agua1.jpeg"
-          alt="Vista principal Proyecto 1"
-          className="w-full h-auto aspect-[16/9] object-cover grayscale"
-        />
+      {/* vista panoramica principal con franja vertical de tipologia */}
+      <div className="flex items-start gap-[7px] mb-10">
+        <ProjectVerticalTag label={project.category} theme={theme} />
+        <div className="flex-1 min-w-0 border border-black overflow-hidden bg-neutral-100">
+          <img
+            src="/images/Casa-Camino-del-agua1.jpeg"
+            alt={`Vista principal ${project.title}`}
+            decoding="async"
+            className="block w-full h-auto aspect-[16/9] object-cover"
+          />
+        </div>
       </div>
 
-      {/* franja de ficha tecnica en 4 columnas */}
-      <div className="grid grid-cols-2 md:grid-cols-4 border-y border-black py-4 mb-12 gap-4 text-xs">
+      {/* ficha tecnica horizontal de 4 columnas */}
+      <dl className="grid grid-cols-2 md:grid-cols-4 border-y border-black py-4 mb-12 gap-4 text-xs">
         <div>
-          <span className="block text-[10px] uppercase text-neutral-500">
+          <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
             Ubicación
-          </span>
-          <span className="font-bold">Región de Valparaíso</span>
+          </dt>
+          <dd className="mt-1 font-semibold">{project.location}</dd>
         </div>
         <div>
-          <span className="block text-[10px] uppercase text-neutral-500">
+          <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
             Superficie
-          </span>
-          <span className="font-bold">240 m²</span>
+          </dt>
+          <dd className="mt-1 font-semibold tabular-nums">{project.area}</dd>
         </div>
         <div>
-          <span className="block text-[10px] uppercase text-neutral-500">
+          <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
             Año
-          </span>
-          <span className="font-bold">2024</span>
+          </dt>
+          <dd className="mt-1 font-semibold tabular-nums">2024</dd>
         </div>
         <div>
-          <span className="block text-[10px] uppercase text-neutral-500">
-            Categoría
-          </span>
-          <span className="font-bold">Arquitectura</span>
+          <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
+            Tipología
+          </dt>
+          <dd className="mt-1 font-semibold">{project.category}</dd>
         </div>
-      </div>
+      </dl>
 
       {/* memoria descriptiva en 2 columnas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-[12.5px] leading-[1.75] text-justify mb-14">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 text-xs leading-[1.65] mb-12">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -97,17 +95,20 @@ export function Proyecto1Page({ onBack }: ProyectoPageProps) {
       </div>
 
       {/* lamina axonometrica */}
-      <div className="border border-black p-4 md:p-8 bg-white">
-        <div className="flex items-center justify-between border-b border-black pb-3 mb-6 text-[11px] uppercase">
+      <div className="border border-black p-4 md:p-6 bg-white">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black pb-3 mb-5 text-[11px] uppercase tracking-[0.04em]">
           <span>Lámina 01 — Axonometría emplazamiento</span>
-          <span>Escala S/E</span>
+          <span className="text-[#737373]">Escala S/E</span>
         </div>
         <img
           src="/images/Casa-Camino-del-agua2.jpeg"
-          alt="Axonometría Proyecto 1"
-          className="w-full h-auto object-contain grayscale"
+          alt={`Axonometría ${project.title}`}
+          decoding="async"
+          className="block w-full h-auto object-contain"
         />
       </div>
+
+      <ProjectFooterBar project={project} theme={theme} onBack={onBack} />
     </article>
   );
 }

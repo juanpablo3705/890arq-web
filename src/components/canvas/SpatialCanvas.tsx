@@ -51,7 +51,7 @@ export function SpatialCanvas() {
         {/* norte (0, -100vh): proyectos */}
         <div
           ref={northRef}
-          className="absolute -top-[100vh] left-0 w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
+          className="site-scroll-pane absolute -top-[100vh] left-0 w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
           <ProyectosSection />
         </div>
@@ -59,7 +59,7 @@ export function SpatialCanvas() {
         {/* oeste (-100vw, 0): contacto */}
         <div
           ref={westRef}
-          className="absolute top-0 -left-[100vw] w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
+          className="site-scroll-pane absolute top-0 -left-[100vw] w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
           <ContactoSection />
         </div>
@@ -67,7 +67,7 @@ export function SpatialCanvas() {
         {/* este (100vw, 0): oficina */}
         <div
           ref={eastRef}
-          className="absolute top-0 left-[100vw] w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
+          className="site-scroll-pane absolute top-0 left-[100vw] w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
           <OficinaSection />
         </div>
@@ -75,7 +75,7 @@ export function SpatialCanvas() {
         {/* sur (0, 100vh): cotizaciones */}
         <div
           ref={southRef}
-          className="absolute top-[100vh] left-0 w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
+          className="site-scroll-pane absolute top-[100vh] left-0 w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
           <CotizacionesSection />
         </div>

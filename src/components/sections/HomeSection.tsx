@@ -51,9 +51,10 @@ export function HomeSection() {
   return (
     <section
       aria-label="Inicio 890 ARQ"
-      className="w-full h-full flex items-center justify-center bg-white px-4"
+      className="w-full h-full flex items-center justify-center bg-white px-[var(--site-pad-x)]"
     >
-      <div className="flex flex-col items-center justify-center gap-y-2.5 sm:gap-y-[65px] -translate-y-4 sm:translate-y-0 lg:-translate-y-[38px]">
+      <div className="site-container h-full flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center gap-y-2.5 sm:gap-y-[65px]">
         {/* brazo norte: proyectos */}
         <div>
           <CrossButton
@@ -111,6 +112,7 @@ export function HomeSection() {
             target="cotizaciones"
             onNavigate={navigateTo}
           />
+        </div>
         </div>
       </div>
     </section>

@@ -9,20 +9,20 @@ export function UIFrame() {
 
   return (
     <>
-      {/* logo superior izquierdo fijo que devuelve siempre al home */}
+      {/* logo superior izquierdo fijo alineado al riel izquierdo del marco unificado */}
       <button
         type="button"
         onClick={goHome}
         aria-label="Volver al inicio 890 ARQ"
-        className="fixed top-4 left-4 sm:top-[24px] md:left-16 lg:left-[calc(max(4rem,(100vw-1140px)/2+109px))] z-50 block cursor-pointer text-black transition-colors duration-200 hover:text-[#E60000]"
+        className="site-logo-anchor block cursor-pointer text-black transition-colors duration-200 hover:text-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-4"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width={82}
-          height={79}
-          viewBox="0 0 135 130"
+          width={76}
+          height={76}
+          viewBox="5 3 125 125"
           fill="none"
-          className="block w-[60px] h-[58px] sm:w-[82px] sm:h-[79px]"
+          className="block w-[56px] h-[56px] sm:w-[76px] sm:h-[76px]"
           aria-hidden="true"
         >
           <rect
@@ -70,11 +70,11 @@ export function UIFrame() {
       </button>
 
       {/* botones sociales en disposicion en l abajo a la derecha */}
-      <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50 flex flex-col items-end gap-[5px]">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-[5px]">
         <a
           href="mailto:contacto@890arq.cl"
           aria-label="Enviar correo a 890 ARQ"
-          className="w-9 h-9 sm:w-10 sm:h-10 bg-black text-white flex items-center justify-center transition-colors duration-200 hover:bg-[#E60000]"
+          className="w-9 h-9 sm:w-10 sm:h-10 bg-black text-white flex items-center justify-center transition-colors duration-200 hover:bg-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +92,7 @@ export function UIFrame() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram 890 ARQ"
-            className="w-9 h-9 sm:w-10 sm:h-10 bg-black text-white flex items-center justify-center transition-colors duration-200 hover:bg-[#E60000]"
+            className="w-9 h-9 sm:w-10 sm:h-10 bg-black text-white flex items-center justify-center transition-colors duration-200 hover:bg-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +109,7 @@ export function UIFrame() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="WhatsApp 890 ARQ"
-            className="w-9 h-9 sm:w-10 sm:h-10 bg-black text-white flex items-center justify-center transition-colors duration-200 hover:bg-[#E60000]"
+            className="w-9 h-9 sm:w-10 sm:h-10 bg-black text-white flex items-center justify-center transition-colors duration-200 hover:bg-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

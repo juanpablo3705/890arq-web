@@ -116,9 +116,9 @@ export function ProyectosSection() {
     <section
       ref={sectionRef}
       aria-label="Proyectos 890 ARQ"
-      className="w-full min-h-screen bg-white pt-32 pb-32 px-6 md:px-16"
+      className="site-section"
     >
-      <div className="w-full max-w-[1140px] mx-auto lg:pl-[110px]">
+      <div className="site-container">
         {!isDetailView ? (
           <div
             className={`transition-opacity duration-500 ${

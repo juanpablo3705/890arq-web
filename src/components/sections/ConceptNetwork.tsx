@@ -530,7 +530,7 @@ export function ConceptNetwork() {
     <figure
       ref={containerRef}
       aria-label="Mapa conceptual de arquitectura y construcción 890 ARQ"
-      className="concept-canvas-wrap relative w-full max-w-[1120px] mx-auto aspect-[1490/900] select-none"
+      className="concept-canvas-wrap relative w-full mx-auto aspect-[1490/900] select-none"
     >
       {/* capa de lineas de conexion en canvas 2d */}
       <canvas
