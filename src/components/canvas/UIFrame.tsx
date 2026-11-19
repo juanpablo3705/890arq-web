@@ -9,20 +9,20 @@ import {
   SocialChannelId,
 } from "./socialChannels";
 
-const FLIGHT_TO_CONTACTO_MS = 760;
-const FLIGHT_TO_CORNER_MS = 700;
+const FLIGHT_TO_CONTACTO_MS = 700;
+const FLIGHT_TO_CORNER_MS = 680;
 const FLIGHT_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 const ENTER_DELAYS: Record<SocialChannelId, number> = {
-  mail: 40,
-  whatsapp: 110,
-  instagram: 180,
+  mail: 20,
+  whatsapp: 70,
+  instagram: 120,
 };
 
 const EXIT_DELAYS: Record<SocialChannelId, number> = {
-  mail: 0,
-  whatsapp: 55,
-  instagram: 110,
+  instagram: 0,
+  whatsapp: 45,
+  mail: 90,
 };
 
 // marco fijo con logo superior y botones sociales coreografiados hacia contacto
@@ -185,7 +185,7 @@ export function UIFrame() {
           });
         });
 
-        const totalExitMs = FLIGHT_TO_CORNER_MS + EXIT_DELAYS.instagram + 30;
+        const totalExitMs = FLIGHT_TO_CORNER_MS + EXIT_DELAYS.mail + 30;
         doneTimer = setTimeout(() => {
           clearInlineTransforms();
           setSocialDockPhase("corner");

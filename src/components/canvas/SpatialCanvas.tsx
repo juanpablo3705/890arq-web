@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SectionId } from "@/types/domain";
 import { useCanvas } from "./CanvasContext";
 import { HomeSection } from "@/components/sections/HomeSection";
@@ -21,6 +21,7 @@ const SECTION_TRANSFORMS: Record<SectionId, string> = {
 // motor del gran lienzo espacial en cruz
 export function SpatialCanvas() {
   const { activeSection, registerContactoPane } = useCanvas();
+  const [settledSection, setSettledSection] = useState<SectionId>(activeSection);
   const northRef = useRef<HTMLDivElement>(null);
   const westRef = useRef<HTMLDivElement>(null);
   const eastRef = useRef<HTMLDivElement>(null);
@@ -31,17 +32,32 @@ export function SpatialCanvas() {
     return () => registerContactoPane(null);
   }, [registerContactoPane]);
 
+  // oculta visualmente las barras de scroll durante el desplazamiento entre vistas
   useEffect(() => {
     if (activeSection === "home") {
+      const raf = requestAnimationFrame(() => {
+        setSettledSection("home");
+      });
       const timer = setTimeout(() => {
         northRef.current?.scrollTo({ top: 0 });
         westRef.current?.scrollTo({ top: 0 });
         eastRef.current?.scrollTo({ top: 0 });
         southRef.current?.scrollTo({ top: 0 });
       }, 700);
-      return () => clearTimeout(timer);
+      return () => {
+        cancelAnimationFrame(raf);
+        clearTimeout(timer);
+      };
     }
+
+    const timer = setTimeout(() => {
+      setSettledSection(activeSection);
+    }, 700);
+    return () => clearTimeout(timer);
   }, [activeSection]);
+
+  const isPaneIdle = (section: SectionId) =>
+    activeSection !== section || settledSection !== section;
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-white">
@@ -56,6 +72,7 @@ export function SpatialCanvas() {
         {/* norte (0, -100vh): proyectos */}
         <div
           ref={northRef}
+          data-pane-idle={isPaneIdle("proyectos") ? "true" : "false"}
           className="site-scroll-pane absolute -top-[100vh] left-0 w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
           <ProyectosSection />
@@ -64,6 +81,7 @@ export function SpatialCanvas() {
         {/* oeste (-100vw, 0): contacto */}
         <div
           ref={westRef}
+          data-pane-idle={isPaneIdle("contacto") ? "true" : "false"}
           className="site-scroll-pane absolute top-0 -left-[100vw] w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
           <ContactoSection />
@@ -72,6 +90,7 @@ export function SpatialCanvas() {
         {/* este (100vw, 0): oficina */}
         <div
           ref={eastRef}
+          data-pane-idle={isPaneIdle("oficina") ? "true" : "false"}
           className="site-scroll-pane absolute top-0 left-[100vw] w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
           <OficinaSection />
@@ -80,6 +99,7 @@ export function SpatialCanvas() {
         {/* sur (0, 100vh): cotizaciones */}
         <div
           ref={southRef}
+          data-pane-idle={isPaneIdle("cotizaciones") ? "true" : "false"}
           className="site-scroll-pane absolute top-[100vh] left-0 w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
           <CotizacionesSection />

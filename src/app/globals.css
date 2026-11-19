@@ -36,7 +36,38 @@ body {
 
 /* marco espacial unificado para todo el sitio */
 .site-scroll-pane {
+  --scrollbar-thumb: #737373;
+  --scrollbar-track: #ffffff;
   scrollbar-gutter: stable both-edges;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* oculta la barra y su pista en paneles inactivos o en transicion sin mover el layout */
+.site-scroll-pane[data-pane-idle="true"] {
+  --scrollbar-thumb: transparent;
+  --scrollbar-track: transparent;
+}
+
+@media (prefers-contrast: more) {
+  .site-scroll-pane[data-pane-idle="false"] {
+    --scrollbar-thumb: #000000;
+    --scrollbar-track: #ffffff;
+  }
+}
+
+@supports not (scrollbar-color: auto) {
+  .site-scroll-pane::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  .site-scroll-pane::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+  }
+
+  .site-scroll-pane::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
 }
 
 .site-section {

@@ -129,54 +129,7 @@ export function ContactoSection() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* columna izquierda donde aterrizan los 3 iconos y se revelan sus textos */}
-          <aside
-            aria-label="Canales directos de contacto"
-            className="lg:col-span-4 lg:pt-[22px]"
-          >
-            <ul role="list" className="flex flex-col items-start gap-5">
-              {CONTACTO_CHANNEL_ORDER.map((id, index) => {
-                const channel = SOCIAL_CHANNELS[id];
-                return (
-                  <li key={id} className="w-full">
-                    <a
-                      href={channel.href}
-                      target={channel.external ? "_blank" : undefined}
-                      rel={channel.external ? "noopener noreferrer" : undefined}
-                      aria-hidden={!isDocked}
-                      tabIndex={isDocked ? undefined : -1}
-                      className={`group inline-flex items-center gap-4 focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-4 ${
-                        isDocked ? "pointer-events-auto" : "pointer-events-none"
-                      }`}
-                    >
-                      <span
-                        ref={(el) => registerSocialSlot(id, el)}
-                        className={`w-9 h-9 sm:w-10 sm:h-10 shrink-0 bg-black text-white flex items-center justify-center transition-colors duration-200 group-hover:bg-[#E60000] ${
-                          isDocked ? "opacity-100" : "opacity-0"
-                        }`}
-                      >
-                        <SocialChannelIcon id={id} />
-                      </span>
-
-                      <span
-                        data-visible={isDocked ? "true" : "false"}
-                        style={
-                          {
-                            "--reveal-delay": `${index * 75}ms`,
-                          } as React.CSSProperties
-                        }
-                        className="contacto-channel-label font-mono text-xs leading-[1.4] text-black group-hover:text-[#E60000]"
-                      >
-                        {channel.contactoLabel}
-                      </span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </aside>
-
-          {/* formulario limpio sin lineas divisoras accesorias */}
+          {/* formulario principal alineado a la izquierda */}
           <form
             ref={formRef}
             onSubmit={handleSubmit}
@@ -454,6 +407,53 @@ export function ContactoSection() {
               </div>
             </div>
           </form>
+
+          {/* columna derecha donde aterrizan los 3 iconos y se revelan sus textos */}
+          <aside
+            aria-label="Canales directos de contacto"
+            className="lg:col-span-4 lg:pt-[22px]"
+          >
+            <ul role="list" className="flex flex-col items-start gap-5">
+              {CONTACTO_CHANNEL_ORDER.map((id, index) => {
+                const channel = SOCIAL_CHANNELS[id];
+                return (
+                  <li key={id} className="w-full">
+                    <a
+                      href={channel.href}
+                      target={channel.external ? "_blank" : undefined}
+                      rel={channel.external ? "noopener noreferrer" : undefined}
+                      aria-hidden={!isDocked}
+                      tabIndex={isDocked ? undefined : -1}
+                      className={`group inline-flex items-center gap-4 focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-4 ${
+                        isDocked ? "pointer-events-auto" : "pointer-events-none"
+                      }`}
+                    >
+                      <span
+                        ref={(el) => registerSocialSlot(id, el)}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 shrink-0 bg-black text-white flex items-center justify-center transition-colors duration-200 group-hover:bg-[#E60000] ${
+                          isDocked ? "opacity-100" : "opacity-0"
+                        }`}
+                      >
+                        <SocialChannelIcon id={id} />
+                      </span>
+
+                      <span
+                        data-visible={isDocked ? "true" : "false"}
+                        style={
+                          {
+                            "--reveal-delay": `${index * 75}ms`,
+                          } as React.CSSProperties
+                        }
+                        className="contacto-channel-label font-mono text-xs leading-[1.4] text-black group-hover:text-[#E60000]"
+                      >
+                        {channel.contactoLabel}
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </aside>
         </div>
       </div>
     </section>
