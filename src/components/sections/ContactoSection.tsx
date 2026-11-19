@@ -29,7 +29,7 @@ const INITIAL_FORM_STATE: ContactFormPayload = {
   mensaje: "",
 };
 
-// vista de contacto coherente con la grilla arquitectonica de proyectos
+// vista de contacto minimalista sin elementos ni lineas redundantes
 export function ContactoSection() {
   const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] =
@@ -109,137 +109,59 @@ export function ContactoSection() {
   return (
     <section aria-label="Contacto 890 ARQ" className="site-section">
       <div className="site-container">
-        {/* barra superior unificada con canales directos */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-5 border-b border-black pb-5 mb-12">
+        {/* unica barra superior del encabezado */}
+        <header className="border-b border-black pb-5 mb-14">
           <h2
             id="contacto-heading"
-            className="font-mono text-lg md:text-xl font-bold tracking-tight text-black uppercase shrink-0"
+            className="font-mono text-lg md:text-xl font-bold tracking-tight text-black uppercase"
           >
             Contacto
           </h2>
-
-          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-xs tracking-tight">
-            <a
-              href="mailto:contacto@890arq.cl"
-              className="site-inline-link whitespace-nowrap"
-            >
-              contacto@890arq.cl
-            </a>
-            <a
-              href="https://api.whatsapp.com/send/?phone=56935532319"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="site-inline-link whitespace-nowrap tabular-nums"
-            >
-              +56 9 3553 2319
-            </a>
-            <a
-              href="https://www.instagram.com/890.arq"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="site-inline-link whitespace-nowrap"
-            >
-              @890.arq
-            </a>
-          </div>
         </header>
 
-        {/* grilla suiza 4/8: ficha de estudio a la izquierda y formulario a la derecha */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-start">
-          <aside className="lg:col-span-4 flex items-start gap-[7px] font-mono text-black">
-            <span className="site-vertical-tag bg-black text-white font-mono font-normal whitespace-nowrap select-none shrink-0">
-              Contacto directo
-            </span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* columna lateral limpia con datos esenciales sin repeticiones */}
+          <aside className="lg:col-span-4 font-mono text-xs leading-[1.7] text-black space-y-6">
+            <p>
+              Cuéntanos sobre tu proyecto, terreno o consulta normativa.
+              Respondemos directamente desde nuestro estudio en la Región de
+              Valparaíso.
+            </p>
 
-            <div className="flex-1 min-w-0">
-              <div className="border-t border-black pt-4">
-                <h3 className="text-[14px] leading-[1.25] tracking-[-0.01em] uppercase">
-                  <span className="font-normal">INICIAR </span>
-                  <span className="font-bold italic">CONVERSACIÓN</span>
-                </h3>
-                <p className="mt-3 text-xs leading-[1.65] font-normal">
-                  Cuéntanos sobre tu terreno, obra o requerimiento normativo.
-                  Respondemos directamente desde nuestro estudio en la Región de
-                  Valparaíso.
-                </p>
-              </div>
-
-              <dl className="mt-6 border-y border-black divide-y divide-black text-xs">
-                <div className="py-3 flex flex-col gap-0.5">
-                  <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
-                    Correo
-                  </dt>
-                  <dd>
-                    <a
-                      href="mailto:contacto@890arq.cl"
-                      className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
-                    >
-                      contacto@890arq.cl
-                    </a>
-                  </dd>
-                </div>
-
-                <div className="py-3 flex flex-col gap-0.5">
-                  <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
-                    Teléfono / WhatsApp
-                  </dt>
-                  <dd className="tabular-nums">
-                    <a
-                      href="https://api.whatsapp.com/send/?phone=56935532319"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
-                    >
-                      +56 9 3553 2319
-                    </a>
-                  </dd>
-                </div>
-
-                <div className="py-3 flex flex-col gap-0.5">
-                  <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
-                    Cobertura
-                  </dt>
-                  <dd>Región de Valparaíso y proyectos en Chile</dd>
-                </div>
-
-                <div className="py-3 flex flex-col gap-0.5">
-                  <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
-                    Divisiones
-                  </dt>
-                  <dd>890 ARQ Ltda. · 890 ARQ SpA</dd>
-                </div>
-              </dl>
-
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <p className="text-[11px] leading-[1.4] text-[#737373]">
-                  Campos marcados con{" "}
-                  <span className="text-[#E60000]" aria-hidden="true">
-                    *
-                  </span>{" "}
-                  son obligatorios.
-                </p>
-
-                <div className="site-index-box shrink-0 font-mono">
-                  <span className="text-[10px] tracking-[0.04em] font-normal uppercase">
-                    EST.
-                  </span>
-                  <span className="text-[12px] font-semibold tabular-nums">
-                    890
-                  </span>
-                </div>
-              </div>
+            <div className="flex flex-col items-start gap-2 pt-1">
+              <a
+                href="mailto:contacto@890arq.cl"
+                className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
+              >
+                contacto@890arq.cl
+              </a>
+              <a
+                href="https://api.whatsapp.com/send/?phone=56935532319"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-black tabular-nums border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
+              >
+                +56 9 3553 2319
+              </a>
+              <a
+                href="https://www.instagram.com/890.arq"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
+              >
+                @890.arq
+              </a>
             </div>
           </aside>
 
-          {/* formulario principal con trazos limpios de 1px */}
+          {/* formulario limpio sin lineas divisoras accesorias */}
           <form
             ref={formRef}
             onSubmit={handleSubmit}
             noValidate
             aria-labelledby="contacto-heading"
-            className="lg:col-span-8 border-t border-black pt-5 flex flex-col gap-6 font-mono text-black"
+            className="lg:col-span-8 flex flex-col gap-6 font-mono text-black"
           >
-            {/* fila 1: nombre y correo */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex flex-col gap-1.5">
                 <label
@@ -319,8 +241,7 @@ export function ContactoSection() {
               </div>
             </div>
 
-            {/* selector de asunto en grilla 2x2 alineada con los campos */}
-            <fieldset className="flex flex-col gap-2.5 border-0 p-0 m-0">
+            <fieldset className="flex flex-col gap-2 border-0 p-0 m-0">
               <legend className="text-[11px] font-bold uppercase tracking-[0.04em] text-black mb-2">
                 Asunto
               </legend>
@@ -359,7 +280,6 @@ export function ContactoSection() {
               )}
             </fieldset>
 
-            {/* fila 2: telefono y comuna */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex flex-col gap-1.5">
                 <label
@@ -437,7 +357,6 @@ export function ContactoSection() {
               </div>
             </div>
 
-            {/* campo mensaje */}
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="contacto-mensaje"
@@ -473,8 +392,7 @@ export function ContactoSection() {
               )}
             </div>
 
-            {/* barra inferior de envio y estado */}
-            <div className="border-t border-black pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <button
                 type="submit"
                 disabled={isSending}

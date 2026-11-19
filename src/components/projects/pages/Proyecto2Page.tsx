@@ -3,7 +3,7 @@
 import React from "react";
 import {
   getProjectMeta,
-  ProjectFooterBar,
+  ProjectBackLink,
   ProjectTitle,
   ProjectTopBar,
   ProjectVerticalTag,
@@ -13,7 +13,7 @@ interface ProyectoPageProps {
   onBack: () => void;
 }
 
-// pagina individual proyecto 2: ficha tecnica lateral + 3 modulos + despiece isometrico
+// proyecto 2: ficha lateral abierta, vista aerea y despiece isometrico
 export function Proyecto2Page({ onBack }: ProyectoPageProps) {
   const { project, theme } = getProjectMeta("proyecto-2");
 
@@ -21,44 +21,30 @@ export function Proyecto2Page({ onBack }: ProyectoPageProps) {
     <article className="w-full font-mono text-black">
       <ProjectTopBar project={project} theme={theme} onBack={onBack} />
 
-      {/* composicion asimetrica: ficha lateral izquierda + vista aerea derecha */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 mb-12 items-start">
-        <div className="lg:col-span-4 border border-black p-6 flex flex-col gap-6">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.04em] text-[#737373] mb-2">
-              {project.category} · {project.location}
-            </p>
-            <ProjectTitle project={project} className="text-lg md:text-xl" />
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-start">
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          <ProjectTitle project={project} className="text-lg md:text-xl" />
 
-          <dl className="space-y-3 border-y border-black py-4 text-xs">
-            <div className="flex justify-between gap-3">
-              <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
-                Código
-              </dt>
-              <dd className="font-semibold tabular-nums">MOD-F35</dd>
+          <dl className="space-y-2 text-xs">
+            <div className="flex justify-between gap-4">
+              <dt className="text-[#737373]">Ubicación</dt>
+              <dd className="text-right">{project.location}</dd>
             </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
-                Superficie
-              </dt>
-              <dd className="font-semibold tabular-nums">{project.area}</dd>
+            <div className="flex justify-between gap-4">
+              <dt className="text-[#737373]">Superficie</dt>
+              <dd className="tabular-nums">{project.area}</dd>
             </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
-                Estructura
-              </dt>
-              <dd className="font-semibold">Acero / Panel SIP</dd>
+            <div className="flex justify-between gap-4">
+              <dt className="text-[#737373]">Código</dt>
+              <dd className="tabular-nums">MOD-F35</dd>
             </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-[10px] uppercase tracking-[0.04em] text-[#737373]">
-                Estado
-              </dt>
-              <dd className="font-semibold">Proyecto Ejecutivo</dd>
+            <div className="flex justify-between gap-4">
+              <dt className="text-[#737373]">Estructura</dt>
+              <dd>Acero / Panel SIP</dd>
             </div>
           </dl>
 
-          <p className="text-xs leading-[1.65]">{project.excerpt}</p>
+          <p className="text-xs leading-[1.7]">{project.excerpt}</p>
         </div>
 
         <div className="lg:col-span-8 flex items-start gap-[7px]">
@@ -74,61 +60,51 @@ export function Proyecto2Page({ onBack }: ProyectoPageProps) {
         </div>
       </div>
 
-      {/* 3 bloques tecnicos modulares */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="border border-black p-5">
-          <p className="text-[12px] tracking-[-0.01em] uppercase mb-2.5">
-            <span className="font-normal text-[#737373] tabular-nums">
-              02.1 /{" "}
-            </span>
-            <span className="font-bold italic">PREFABRICACIÓN</span>
-          </p>
-          <p className="text-xs leading-[1.6]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 mb-14 text-xs leading-[1.7]">
+        <div>
+          <h2 className="text-[12px] font-bold uppercase tracking-[-0.01em] mb-2">
+            Prefabricación
+          </h2>
+          <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
         </div>
-        <div className="border border-black p-5">
-          <p className="text-[12px] tracking-[-0.01em] uppercase mb-2.5">
-            <span className="font-normal text-[#737373] tabular-nums">
-              02.2 /{" "}
-            </span>
-            <span className="font-bold italic">ENSAMBLAJE EN OBRA</span>
-          </p>
-          <p className="text-xs leading-[1.6]">
+        <div>
+          <h2 className="text-[12px] font-bold uppercase tracking-[-0.01em] mb-2">
+            Ensamblaje en obra
+          </h2>
+          <p>
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
             nisi ut aliquip ex ea commodo consequat.
           </p>
         </div>
-        <div className="border border-black p-5">
-          <p className="text-[12px] tracking-[-0.01em] uppercase mb-2.5">
-            <span className="font-normal text-[#737373] tabular-nums">
-              02.3 /{" "}
-            </span>
-            <span className="font-bold italic">EFICIENCIA TÉRMICA</span>
-          </p>
-          <p className="text-xs leading-[1.6]">
+        <div>
+          <h2 className="text-[12px] font-bold uppercase tracking-[-0.01em] mb-2">
+            Eficiencia térmica
+          </h2>
+          <p>
             Duis aute irure dolor in reprehenderit in voluptate velit esse
             cillum dolore eu fugiat nulla pariatur.
           </p>
         </div>
       </div>
 
-      {/* despiece isometrico y elevaciones */}
-      <div className="border border-black p-4 md:p-6 bg-white">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black pb-3 mb-5 text-[11px] uppercase tracking-[0.04em]">
-          <span>Despiece axonométrico explotado y elevaciones</span>
-          <span className="text-[#737373]">Lámina Técnica 02</span>
+      <figure>
+        <div className="border border-black p-4 md:p-8 bg-white">
+          <img
+            src="/images/CASA-MODULO-F352.jpeg"
+            alt={`Despiece isométrico ${project.title}`}
+            decoding="async"
+            className="block w-full h-auto object-contain"
+          />
         </div>
-        <img
-          src="/images/CASA-MODULO-F352.jpeg"
-          alt={`Despiece isométrico ${project.title}`}
-          decoding="async"
-          className="block w-full h-auto object-contain"
-        />
-      </div>
+        <figcaption className="mt-2.5 text-[11px] text-[#737373]">
+          Despiece axonométrico explotado y elevaciones
+        </figcaption>
+      </figure>
 
-      <ProjectFooterBar project={project} theme={theme} onBack={onBack} />
+      <ProjectBackLink theme={theme} onBack={onBack} />
     </article>
   );
 }

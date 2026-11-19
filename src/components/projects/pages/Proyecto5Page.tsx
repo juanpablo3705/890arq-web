@@ -3,7 +3,7 @@
 import React from "react";
 import {
   getProjectMeta,
-  ProjectFooterBar,
+  ProjectBackLink,
   ProjectTitle,
   ProjectTopBar,
   ProjectVerticalTag,
@@ -13,7 +13,7 @@ interface ProyectoPageProps {
   onBack: () => void;
 }
 
-// pagina individual proyecto 5: dossier vertical con axonometria de 4 niveles
+// proyecto 5: isometria vertical a la izquierda y recorrido fotografico con memoria a la derecha
 export function Proyecto5Page({ onBack }: ProyectoPageProps) {
   const { project, theme } = getProjectMeta("proyecto-5");
 
@@ -21,38 +21,32 @@ export function Proyecto5Page({ onBack }: ProyectoPageProps) {
     <article className="w-full font-mono text-black">
       <ProjectTopBar project={project} theme={theme} onBack={onBack} />
 
-      {/* encabezado con resumen tecnico */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.04em] text-[#737373] mb-2">
-            {project.category} · {project.location}
-          </p>
-          <ProjectTitle project={project} />
-        </div>
-        <div className="border border-black px-4 py-2.5 text-xs tabular-nums">
-          <span>Superficie: {project.area} · 4 Niveles</span>
-        </div>
+      <header className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-10">
+        <ProjectTitle project={project} />
+        <p className="text-xs text-[#737373] tabular-nums">
+          {project.location} · {project.area} · 4 Niveles
+        </p>
       </header>
 
-      {/* grilla dividida: axonometria vertical izquierda + fotografias y memoria derecha */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-        <div className="lg:col-span-5 flex items-start gap-[7px]">
-          <ProjectVerticalTag label={project.category} theme={theme} />
-          <div className="flex-1 min-w-0 border border-black p-4 bg-white">
-            <div className="border-b border-black pb-2.5 mb-4 text-[11px] uppercase tracking-[0.04em] flex justify-between gap-2">
-              <span>Isometría Explotada</span>
-              <span className="text-[#737373] tabular-nums">05.ISO</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <figure className="lg:col-span-5">
+          <div className="flex items-start gap-[7px]">
+            <ProjectVerticalTag label={project.category} theme={theme} />
+            <div className="flex-1 min-w-0 border border-black p-4 md:p-6 bg-white">
+              <img
+                src="/images/Proyecto-Codequir2.jpeg"
+                alt={`Axonometría por niveles ${project.title}`}
+                decoding="async"
+                className="block w-full h-auto object-contain"
+              />
             </div>
-            <img
-              src="/images/Proyecto-Codequir2.jpeg"
-              alt={`Axonometría por niveles ${project.title}`}
-              decoding="async"
-              className="block w-full h-auto object-contain"
-            />
           </div>
-        </div>
+          <figcaption className="mt-2.5 text-[11px] text-[#737373]">
+            Isometría explotada por niveles
+          </figcaption>
+        </figure>
 
-        <div className="lg:col-span-7 flex flex-col gap-8">
+        <div className="lg:col-span-7 flex flex-col gap-10">
           <div className="border border-black overflow-hidden bg-neutral-100">
             <img
               src="/images/Proyecto-Codequir1.jpeg"
@@ -62,7 +56,7 @@ export function Proyecto5Page({ onBack }: ProyectoPageProps) {
             />
           </div>
 
-          <div className="text-xs leading-[1.65] space-y-4">
+          <div className="text-xs leading-[1.7] space-y-4">
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -88,7 +82,7 @@ export function Proyecto5Page({ onBack }: ProyectoPageProps) {
         </div>
       </div>
 
-      <ProjectFooterBar project={project} theme={theme} onBack={onBack} />
+      <ProjectBackLink theme={theme} onBack={onBack} />
     </article>
   );
 }

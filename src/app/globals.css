@@ -109,7 +109,7 @@ body {
   }
 }
 
-/* etiquetas verticales y cajas de indice coherentes con proyectos */
+/* franja vertical rotada compartida con tarjetas de proyectos */
 .site-vertical-tag {
   display: inline-flex;
   align-items: center;
@@ -120,22 +120,6 @@ body {
   font-size: 11px;
   line-height: 1;
   letter-spacing: 0.01em;
-}
-
-.site-index-box {
-  width: 56px;
-  min-height: 48px;
-  border: 1px solid #000000;
-  background-color: #ffffff;
-  color: #000000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-  text-align: center;
-  padding: 6px;
-  line-height: 1.15;
 }
 
 /* campos de formulario con validacion diferida tras interaccion */
@@ -208,8 +192,7 @@ body {
 }
 
 @media (forced-colors: active) {
-  .site-vertical-tag,
-  .site-index-box {
+  .site-vertical-tag {
     border: 1px solid CanvasText;
   }
 
@@ -331,18 +314,6 @@ body {
   align-content: center;
   justify-content: center;
   align-items: center;
-}
-
-.team-card-tag {
-  background-color: #000000;
-  color: #ffffff;
-  transition: background-color 200ms ease;
-}
-
-.team-card:has(.flip-card:hover) .team-card-tag,
-.team-card:has(.flip-card:focus-visible) .team-card-tag,
-.team-card:has(.flip-card[data-flipped="true"]) .team-card-tag {
-  background-color: #e60000;
 }
 
 @media (prefers-reduced-motion: reduce) {

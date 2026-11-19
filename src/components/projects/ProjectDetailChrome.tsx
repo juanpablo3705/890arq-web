@@ -9,7 +9,7 @@ export interface ResolvedProjectMeta {
   theme: CategoryTheme;
 }
 
-// obtiene metadatos y tema cromático oficial desde el catalogo central
+// obtiene metadatos y tema cromatico desde el catalogo central
 export function getProjectMeta(slug: string): ResolvedProjectMeta {
   const project =
     PROJECTS_DATA.find((item) => item.slug === slug) ?? PROJECTS_DATA[0];
@@ -23,10 +23,10 @@ interface ProjectBarProps {
   onBack: () => void;
 }
 
-// barra superior unificada para cada vista de proyecto
+// barra superior unica sin etiquetas redundantes
 export function ProjectTopBar({ project, theme, onBack }: ProjectBarProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black pb-5 mb-12">
+    <div className="flex items-center justify-between gap-4 border-b border-black pb-5 mb-12">
       <button
         type="button"
         onClick={onBack}
@@ -36,37 +36,25 @@ export function ProjectTopBar({ project, theme, onBack }: ProjectBarProps) {
         &lt; Volver a proyectos
       </button>
 
-      <div className="flex items-center gap-3">
-        <span
-          style={{
-            backgroundColor: theme.highlightBg,
-            color: theme.highlightText,
-          }}
-          className="px-2.5 py-1.5 font-mono text-[11px] leading-none tracking-[0.01em] whitespace-nowrap"
-        >
-          {project.category}
+      <div
+        style={{
+          borderColor: theme.boxBorder,
+          color: theme.boxText,
+        }}
+        className="w-[56px] min-h-[48px] border bg-white flex flex-col items-center justify-center gap-[1px] text-center px-1.5 py-1.5 font-mono leading-[1.15] shrink-0"
+      >
+        <span className="text-[10px] tracking-[0.04em] font-normal uppercase">
+          PROY
         </span>
-
-        <div
-          style={{
-            borderColor: theme.boxBorder,
-            color: theme.boxText,
-          }}
-          className="w-[56px] min-h-[48px] border bg-white flex flex-col items-center justify-center gap-[1px] text-center px-1.5 py-1.5 font-mono leading-[1.15] shrink-0"
-        >
-          <span className="text-[10px] tracking-[0.04em] font-normal uppercase">
-            PROY
-          </span>
-          <span className="text-[12px] font-semibold tabular-nums">
-            {project.code}
-          </span>
-        </div>
+        <span className="text-[12px] font-semibold tabular-nums">
+          {project.code}
+        </span>
       </div>
     </div>
   );
 }
 
-// franja vertical rotada con el color de tipologia del proyecto
+// unica franja vertical de tipologia por proyecto
 export function ProjectVerticalTag({
   label,
   theme,
@@ -105,10 +93,16 @@ export function ProjectTitle({
   );
 }
 
-// cierre inferior uniforme con retorno rapido a la grilla
-export function ProjectFooterBar({ project, theme, onBack }: ProjectBarProps) {
+// retorno discreto al cierre sin agregar lineas extra
+export function ProjectBackLink({
+  theme,
+  onBack,
+}: {
+  theme: CategoryTheme;
+  onBack: () => void;
+}) {
   return (
-    <footer className="mt-14 pt-6 border-t border-black flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
+    <div className="mt-14">
       <button
         type="button"
         onClick={onBack}
@@ -117,10 +111,6 @@ export function ProjectFooterBar({ project, theme, onBack }: ProjectBarProps) {
       >
         &lt; Volver a proyectos
       </button>
-
-      <span className="text-[11px] text-[#737373] uppercase tracking-[0.04em] tabular-nums">
-        PROY {project.code} · {project.category} · {project.area}
-      </span>
-    </footer>
+    </div>
   );
 }
