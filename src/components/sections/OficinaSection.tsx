@@ -95,8 +95,8 @@ const TEAM_MEMBERS = [
   },
 ];
 
-// seccion unificada de nosotros y servicios
-export function NosotrosSection() {
+// seccion unificada de oficina y servicios
+export function OficinaSection() {
   const [flippedId, setFlippedId] = useState<string | null>(null);
 
   const toggleCard = (id: string) => {
@@ -105,7 +105,7 @@ export function NosotrosSection() {
 
   return (
     <section
-      aria-label="Nosotros 890 ARQ"
+      aria-label="Oficina 890 ARQ"
       className="w-full min-h-screen bg-white pt-32 md:pt-44 pb-24 sm:pb-14 px-6 md:px-16"
     >
       <div className="w-full max-w-[1120px] mx-auto flex flex-col gap-20 md:gap-28">
@@ -243,7 +243,7 @@ export function NosotrosSection() {
         </div>
       </div>
 
-      {/* linea final de creditos al cierre de nosotros */}
+      {/* linea final de creditos al cierre de oficina */}
       <p className="mt-24 md:mt-32 text-center font-mono text-xs leading-normal font-normal text-[#737373] sm:px-24">
         v2.0 | Diseño UI:{" "}
         <a

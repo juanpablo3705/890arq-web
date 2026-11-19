@@ -6,7 +6,7 @@ import { useCanvas } from "./CanvasContext";
 import { HomeSection } from "@/components/sections/HomeSection";
 import { ProyectosSection } from "@/components/sections/ProyectosSection";
 import { ContactoSection } from "@/components/sections/ContactoSection";
-import { NosotrosSection } from "@/components/sections/NosotrosSection";
+import { OficinaSection } from "@/components/sections/OficinaSection";
 import { CotizacionesSection } from "@/components/sections/CotizacionesSection";
 
 // mapa de transformaciones para traer cada brazo de la cruz al centro de la camara
@@ -14,7 +14,7 @@ const SECTION_TRANSFORMS: Record<SectionId, string> = {
   home: "translate-x-0 translate-y-0",
   proyectos: "translate-x-0 translate-y-[100vh]",
   contacto: "translate-x-[100vw] translate-y-0",
-  nosotros: "-translate-x-[100vw] translate-y-0",
+  oficina: "-translate-x-[100vw] translate-y-0",
   cotizaciones: "translate-x-0 -translate-y-[100vh]",
 };
 
@@ -64,12 +64,12 @@ export function SpatialCanvas() {
           <ContactoSection />
         </div>
 
-        {/* este (100vw, 0): nosotros */}
+        {/* este (100vw, 0): oficina */}
         <div
           ref={eastRef}
           className="absolute top-0 left-[100vw] w-screen h-screen overflow-y-auto overflow-x-hidden scroll-smooth"
         >
-          <NosotrosSection />
+          <OficinaSection />
         </div>
 
         {/* sur (0, 100vh): cotizaciones */}

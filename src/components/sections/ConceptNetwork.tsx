@@ -452,7 +452,7 @@ export function ConceptNetwork() {
 
     const tick = (now: number) => {
       if (
-        activeSection !== "nosotros" ||
+        activeSection !== "oficina" ||
         !isVisibleRef.current ||
         motionQuery.matches ||
         document.hidden
@@ -488,7 +488,7 @@ export function ConceptNetwork() {
       }
 
       const shouldRun =
-        activeSection === "nosotros" &&
+        activeSection === "oficina" &&
         isVisibleRef.current &&
         !document.hidden;
 

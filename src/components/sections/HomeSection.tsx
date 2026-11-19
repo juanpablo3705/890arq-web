@@ -63,7 +63,7 @@ export function HomeSection() {
           />
         </div>
 
-        {/* fila central: contacto (oeste), logo central (centro), nosotros (este) */}
+        {/* fila central: contacto (oeste), logo central (centro), oficina (este) */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-y-3 sm:gap-y-0 sm:gap-x-5 md:gap-x-12 lg:gap-x-[97.5px]">
           <CrossButton
             label="Contacto"
@@ -98,8 +98,8 @@ export function HomeSection() {
           </div>
 
           <CrossButton
-            label="Nosotros"
-            target="nosotros"
+            label="Oficina"
+            target="oficina"
             onNavigate={navigateTo}
           />
         </div>
