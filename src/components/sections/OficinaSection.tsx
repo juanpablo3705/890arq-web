@@ -163,83 +163,69 @@ export function OficinaSection() {
           </div>
 
           {/* equipo: 4 tarjetas cuadradas interactivas sin elementos redundantes */}
-          <div>
-            <h3 className="font-mono text-xs font-bold tracking-tight text-black uppercase mb-8">
-              Equipo
-            </h3>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
-              {TEAM_MEMBERS.map((member) => {
-                const isFlipped = flippedId === member.id;
-                return (
-                  <button
-                    key={member.id}
-                    type="button"
-                    aria-pressed={isFlipped}
-                    aria-label={`${member.name}, ${member.role}`}
-                    data-flipped={isFlipped ? "true" : "false"}
-                    onClick={() => toggleCard(member.id)}
-                    className="flip-card block w-full aspect-square border border-black bg-transparent p-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-4"
-                  >
-                    <span className="flip-card-inner block">
-                      <span className="flip-card-front block overflow-hidden">
-                        <img
-                          src={member.src}
-                          alt={member.alt}
-                          decoding="async"
-                          className="block w-full h-full object-cover grayscale"
-                        />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
+            {TEAM_MEMBERS.map((member) => {
+              const isFlipped = flippedId === member.id;
+              return (
+                <button
+                  key={member.id}
+                  type="button"
+                  aria-pressed={isFlipped}
+                  aria-label={`${member.name}, ${member.role}`}
+                  data-flipped={isFlipped ? "true" : "false"}
+                  onClick={() => toggleCard(member.id)}
+                  className="flip-card block w-full aspect-square border border-black bg-transparent p-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-4"
+                >
+                  <span className="flip-card-inner block">
+                    <span className="flip-card-front block overflow-hidden">
+                      <img
+                        src={member.src}
+                        alt={member.alt}
+                        decoding="async"
+                        className="block w-full h-full object-cover grayscale"
+                      />
+                    </span>
+                    <span className="flip-card-back font-mono">
+                      <span className="block text-[0.95rem] sm:text-[1.05rem] leading-[1.2] font-medium mb-2.5">
+                        {member.name}
                       </span>
-                      <span className="flip-card-back font-mono">
-                        <span className="block text-[0.95rem] sm:text-[1.05rem] leading-[1.2] font-medium mb-2.5">
-                          {member.name}
+                      {member.credentials.map((cred) => (
+                        <span
+                          key={cred}
+                          className="block text-[0.7rem] sm:text-[0.75rem] leading-[1.45] font-normal mb-2"
+                        >
+                          {cred}
                         </span>
-                        {member.credentials.map((cred) => (
-                          <span
-                            key={cred}
-                            className="block text-[0.7rem] sm:text-[0.75rem] leading-[1.45] font-normal mb-2"
-                          >
-                            {cred}
-                          </span>
-                        ))}
-                        <span className="block text-[0.8rem] sm:text-[0.9rem] leading-[1.25] font-medium mt-1">
-                          {member.role}
-                        </span>
+                      ))}
+                      <span className="block text-[0.8rem] sm:text-[0.9rem] leading-[1.25] font-medium mt-1">
+                        {member.role}
                       </span>
                     </span>
-                  </button>
-                );
-              })}
-            </div>
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           {/* vision en dos columnas limpias */}
-          <div>
-            <h3 className="font-mono text-xs font-bold tracking-tight text-black uppercase mb-8">
-              Visión
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 font-mono text-xs leading-[1.7] font-normal text-black">
-              <p>
-                En términos de diseño arquitectónico y construcción,{" "}
-                <strong className="font-semibold">890 ARQ</strong> se enfoca en
-                alcanzar un desarrollo sostenible de sus proyectos, con énfasis
-                en el diseño elemental y modular de las obras realizadas,
-                profundizando en el aprovechamiento de las condiciones
-                particulares de cada emplazamiento y la optimización
-                constructiva.
-              </p>
-              <p>
-                De manera simultánea, para toda clase de proyectos de
-                arquitectura y obras civiles se busca establecer un canal de
-                comunicación transparente con cada cliente, a modo de entregar
-                soluciones expeditas y personalizadas tanto en diseño y gestión
-                municipal (
-                <strong className="font-semibold">890 ARQ Ltda.</strong>) como
-                en ejecución constructiva (
-                <strong className="font-semibold">890 ARQ SpA</strong>).
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 font-mono text-xs leading-[1.7] font-normal text-black">
+            <p>
+              En términos de diseño arquitectónico y construcción,{" "}
+              <strong className="font-semibold">890 ARQ</strong> se enfoca en
+              alcanzar un desarrollo sostenible de sus proyectos, con énfasis en
+              el diseño elemental y modular de las obras realizadas,
+              profundizando en el aprovechamiento de las condiciones
+              particulares de cada emplazamiento y la optimización constructiva.
+            </p>
+            <p>
+              De manera simultánea, para toda clase de proyectos de arquitectura
+              y obras civiles se busca establecer un canal de comunicación
+              transparente con cada cliente, a modo de entregar soluciones
+              expeditas y personalizadas tanto en diseño y gestión municipal (
+              <strong className="font-semibold">890 ARQ Ltda.</strong>) como en
+              ejecución constructiva (
+              <strong className="font-semibold">890 ARQ SpA</strong>).
+            </p>
           </div>
 
           {/* mapa conceptual animado sobre blanco puro */}
@@ -248,58 +234,45 @@ export function OficinaSection() {
           </div>
 
           {/* servicios en grilla tipografica abierta sin cajas ni divisiones extra */}
-          <div>
-            <h3 className="font-mono text-xs font-bold tracking-tight text-black uppercase mb-10">
-              Servicios
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12">
-              {SERVICE_PILLARS.map((pillar) => (
-                <div key={pillar.emphasis + pillar.prefix}>
-                  <h4 className="font-mono text-[13px] leading-[1.25] tracking-[-0.01em] text-black uppercase mb-4">
-                    {pillar.prefix ? (
-                      <>
-                        <span className="font-normal">{pillar.prefix} </span>
-                        <span className="font-bold italic">
-                          {pillar.emphasis}
-                        </span>
-                      </>
-                    ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12">
+            {SERVICE_PILLARS.map((pillar) => (
+              <div key={pillar.emphasis + pillar.prefix}>
+                <h3 className="font-mono text-[13px] leading-[1.25] tracking-[-0.01em] text-black uppercase mb-4">
+                  {pillar.prefix ? (
+                    <>
+                      <span className="font-normal">{pillar.prefix} </span>
                       <span className="font-bold italic">
                         {pillar.emphasis}
                       </span>
-                    )}
-                  </h4>
+                    </>
+                  ) : (
+                    <span className="font-bold italic">
+                      {pillar.emphasis}
+                    </span>
+                  )}
+                </h3>
 
-                  <ul className="font-mono text-xs leading-[1.6] font-normal text-black space-y-1.5">
-                    {pillar.items.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span
-                          aria-hidden="true"
-                          className="text-[#737373] select-none shrink-0"
-                        >
-                          —
-                        </span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+                <ul className="font-mono text-xs leading-[1.6] font-normal text-black space-y-1.5">
+                  {pillar.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <span
+                        aria-hidden="true"
+                        className="text-[#737373] select-none shrink-0"
+                      >
+                        —
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* linea final de creditos al cierre de oficina */}
         <footer className="mt-24 pt-6 border-t border-black text-center font-mono text-xs leading-normal font-normal text-[#737373]">
-          v2.0 | Diseño UI:{" "}
-          <a
-            href="mailto:zett.webdesign@gmail.com"
-            className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
-          >
-            Gabriela Zett
-          </a>{" "}
-          • Desarrollo Web:{" "}
+          Diseño y Desarrollo Web:{" "}
           <a
             href="https://personal-web-gamma-six.vercel.app/"
             target="_blank"
@@ -307,6 +280,13 @@ export function OficinaSection() {
             className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
           >
             Juan Pablo Oyanedel
+          </a>{" "}
+          • Diseño /home:{" "}
+          <a
+            href="mailto:zett.webdesign@gmail.com"
+            className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
+          >
+            Gabriela Zett
           </a>
         </footer>
       </div>
