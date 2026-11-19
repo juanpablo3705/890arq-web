@@ -3,6 +3,12 @@
 import React, { useRef, useState } from "react";
 import { ContactFormPayload } from "@/types/domain";
 import { sendContactAction } from "@/actions/send-contact";
+import { useCanvas } from "@/components/canvas/CanvasContext";
+import {
+  CONTACTO_CHANNEL_ORDER,
+  SOCIAL_CHANNELS,
+  SocialChannelIcon,
+} from "@/components/canvas/socialChannels";
 
 const ASUNTO_OPTIONS = [
   "Proyecto de Arquitectura / Diseño",
@@ -29,8 +35,9 @@ const INITIAL_FORM_STATE: ContactFormPayload = {
   mensaje: "",
 };
 
-// vista de contacto minimalista sin elementos ni lineas redundantes
+// vista de contacto con columna acoplada para los accesos directos y combobox de asunto
 export function ContactoSection() {
+  const { socialDockPhase, registerSocialSlot } = useCanvas();
   const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] =
     useState<ContactFormPayload>(INITIAL_FORM_STATE);
@@ -42,6 +49,8 @@ export function ContactoSection() {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  const isDocked = socialDockPhase === "docked";
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -120,38 +129,51 @@ export function ContactoSection() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* columna lateral limpia con datos esenciales sin repeticiones */}
-          <aside className="lg:col-span-4 font-mono text-xs leading-[1.7] text-black space-y-6">
-            <p>
-              Cuéntanos sobre tu proyecto, terreno o consulta normativa.
-              Respondemos directamente desde nuestro estudio en la Región de
-              Valparaíso.
-            </p>
+          {/* columna izquierda donde aterrizan los 3 iconos y se revelan sus textos */}
+          <aside
+            aria-label="Canales directos de contacto"
+            className="lg:col-span-4 lg:pt-[22px]"
+          >
+            <ul role="list" className="flex flex-col items-start gap-5">
+              {CONTACTO_CHANNEL_ORDER.map((id, index) => {
+                const channel = SOCIAL_CHANNELS[id];
+                return (
+                  <li key={id} className="w-full">
+                    <a
+                      href={channel.href}
+                      target={channel.external ? "_blank" : undefined}
+                      rel={channel.external ? "noopener noreferrer" : undefined}
+                      aria-hidden={!isDocked}
+                      tabIndex={isDocked ? undefined : -1}
+                      className={`group inline-flex items-center gap-4 focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-4 ${
+                        isDocked ? "pointer-events-auto" : "pointer-events-none"
+                      }`}
+                    >
+                      <span
+                        ref={(el) => registerSocialSlot(id, el)}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 shrink-0 bg-black text-white flex items-center justify-center transition-colors duration-200 group-hover:bg-[#E60000] ${
+                          isDocked ? "opacity-100" : "opacity-0"
+                        }`}
+                      >
+                        <SocialChannelIcon id={id} />
+                      </span>
 
-            <div className="flex flex-col items-start gap-2 pt-1">
-              <a
-                href="mailto:contacto@890arq.cl"
-                className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
-              >
-                contacto@890arq.cl
-              </a>
-              <a
-                href="https://api.whatsapp.com/send/?phone=56935532319"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-black tabular-nums border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
-              >
-                +56 9 3553 2319
-              </a>
-              <a
-                href="https://www.instagram.com/890.arq"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-black border-b border-transparent transition-colors duration-200 hover:text-[#E60000] hover:border-[#E60000] focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
-              >
-                @890.arq
-              </a>
-            </div>
+                      <span
+                        data-visible={isDocked ? "true" : "false"}
+                        style={
+                          {
+                            "--reveal-delay": `${index * 75}ms`,
+                          } as React.CSSProperties
+                        }
+                        className="contacto-channel-label font-mono text-xs leading-[1.4] text-black group-hover:text-[#E60000]"
+                      >
+                        {channel.contactoLabel}
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
           </aside>
 
           {/* formulario limpio sin lineas divisoras accesorias */}
@@ -241,34 +263,50 @@ export function ContactoSection() {
               </div>
             </div>
 
-            <fieldset className="flex flex-col gap-2 border-0 p-0 m-0">
-              <legend className="text-[11px] font-bold uppercase tracking-[0.04em] text-black mb-2">
-                Asunto
-              </legend>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {ASUNTO_OPTIONS.map((option, idx) => {
-                  const id = `contacto-asunto-${idx}`;
-                  return (
-                    <div key={option} className="relative">
-                      <input
-                        id={id}
-                        type="radio"
-                        name="asunto"
-                        value={option}
-                        checked={formData.asunto === option}
-                        disabled={isSending}
-                        onChange={handleChange}
-                        className="site-radio-input sr-only"
-                      />
-                      <label
-                        htmlFor={id}
-                        className="site-radio-chip w-full font-mono text-xs tracking-tight"
-                      >
-                        {option}
-                      </label>
-                    </div>
-                  );
-                })}
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="contacto-asunto"
+                className="text-[11px] font-bold uppercase tracking-[0.04em] text-black"
+              >
+                Asunto{" "}
+                <span className="text-[#E60000]" aria-hidden="true">
+                  *
+                </span>
+              </label>
+              <div className="site-select-wrap relative">
+                <select
+                  id="contacto-asunto"
+                  name="asunto"
+                  required
+                  disabled={isSending}
+                  aria-invalid={fieldErrors.asunto ? "true" : "false"}
+                  aria-describedby={
+                    fieldErrors.asunto ? "contacto-asunto-error" : undefined
+                  }
+                  value={formData.asunto}
+                  onChange={handleChange}
+                  className="site-field site-select font-mono cursor-pointer"
+                >
+                  {ASUNTO_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                  className="site-select-chevron pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black"
+                >
+                  <path
+                    d="M3.5 6L8 10.5L12.5 6"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="square"
+                  />
+                </svg>
               </div>
               {fieldErrors.asunto && (
                 <p
@@ -278,7 +316,7 @@ export function ContactoSection() {
                   Error: {fieldErrors.asunto}
                 </p>
               )}
-            </fieldset>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex flex-col gap-1.5">

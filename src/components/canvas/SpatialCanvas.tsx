@@ -20,11 +20,16 @@ const SECTION_TRANSFORMS: Record<SectionId, string> = {
 
 // motor del gran lienzo espacial en cruz
 export function SpatialCanvas() {
-  const { activeSection } = useCanvas();
+  const { activeSection, registerContactoPane } = useCanvas();
   const northRef = useRef<HTMLDivElement>(null);
   const westRef = useRef<HTMLDivElement>(null);
   const eastRef = useRef<HTMLDivElement>(null);
   const southRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    registerContactoPane(westRef.current);
+    return () => registerContactoPane(null);
+  }, [registerContactoPane]);
 
   useEffect(() => {
     if (activeSection === "home") {

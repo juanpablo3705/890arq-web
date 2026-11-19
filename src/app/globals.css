@@ -160,35 +160,120 @@ body {
   cursor: not-allowed;
 }
 
-.site-radio-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #000000;
+/* combobox de asunto con appearance: base-select y respaldo nativo limpio */
+.site-select {
+  appearance: none;
+  padding-inline-end: 2.5rem;
+  border-radius: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.site-select option {
   background-color: #ffffff;
   color: #000000;
-  cursor: pointer;
-  transition:
-    background-color 180ms ease,
-    color 180ms ease,
-    border-color 180ms ease;
 }
 
-.site-radio-chip:hover {
-  border-color: #e60000;
-  color: #e60000;
+@supports (appearance: base-select) {
+  .site-select,
+  .site-select::picker(select) {
+    appearance: base-select;
+  }
+
+  .site-select {
+    width: 100%;
+    padding-inline-end: 0.875rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .site-select-chevron {
+    display: none;
+  }
+
+  .site-select::picker(select) {
+    border: 1px solid #000000;
+    border-radius: 0;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 0.25rem;
+    margin-block-start: 4px;
+    font-family: var(--font-ibm-plex-mono), monospace;
+    font-size: 0.8125rem;
+  }
+
+  .site-select::picker-icon {
+    color: #000000;
+    margin-inline-start: 0.75rem;
+    transition: transform 180ms ease;
+  }
+
+  .site-select:open::picker-icon {
+    transform: rotate(180deg);
+  }
+
+  .site-select option {
+    padding: 0.625rem 0.75rem;
+    min-height: 40px;
+    border-radius: 0;
+    color: #000000;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition:
+      background-color 140ms ease,
+      color 140ms ease;
+  }
+
+  .site-select option:hover,
+  .site-select option:focus-visible {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  .site-select option:checked {
+    font-weight: 600;
+  }
+
+  .site-select option::checkmark {
+    color: #e60000;
+  }
+
+  .site-select option:hover::checkmark {
+    color: #ffffff;
+  }
 }
 
-.site-radio-input:checked + .site-radio-chip {
-  background-color: #000000;
-  border-color: #000000;
-  color: #ffffff;
+/* textos de los canales directos que aparecen por difuminacion al aterrizar los iconos */
+.contacto-channel-label {
+  opacity: 0;
+  transition: color 200ms ease;
 }
 
-.site-radio-input:focus-visible + .site-radio-chip {
-  outline: 2px solid #000000;
-  outline-offset: 3px;
+.contacto-channel-label[data-visible="true"] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .contacto-channel-label {
+    transform: translate3d(-8px, 0, 0);
+    filter: blur(3px);
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease,
+      filter 160ms ease,
+      color 200ms ease;
+  }
+
+  .contacto-channel-label[data-visible="true"] {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0px);
+    transition:
+      opacity 420ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      filter 420ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      color 200ms ease 0ms;
+  }
 }
 
 @media (forced-colors: active) {
@@ -196,10 +281,9 @@ body {
     border: 1px solid CanvasText;
   }
 
-  .site-radio-input:checked + .site-radio-chip {
-    background-color: Highlight;
-    color: HighlightText;
-    border-color: Highlight;
+  .site-select,
+  .site-select::picker(select) {
+    border-color: CanvasText;
   }
 }
 
