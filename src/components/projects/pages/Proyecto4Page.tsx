@@ -29,7 +29,7 @@ export function Proyecto4Page({ onBack }: ProyectoPageProps) {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_220px_220px] divide-y md:divide-y-0 md:divide-x divide-black">
           <div className="p-6">
             <span className="text-[11px] uppercase text-neutral-500 block mb-1">
-              Categoria 4 / Sur de Chile
+              Especialidades técnicas / Caburgua, IX Región
             </span>
             <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight">
               Proyecto 4

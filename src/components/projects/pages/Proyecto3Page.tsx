@@ -27,7 +27,7 @@ export function Proyecto3Page({ onBack }: ProyectoPageProps) {
       {/* titulo centrado estilo monografia */}
       <header className="text-center max-w-[680px] mx-auto mb-12">
         <p className="text-[11px] uppercase tracking-widest text-neutral-500 mb-2">
-          Categoria 3 / Hijuelas, Ocoa
+          Construcción / Hijuelas, V Región
         </p>
         <h1 className="text-2xl md:text-4xl font-bold uppercase tracking-tight mb-4">
           Proyecto 3

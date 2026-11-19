@@ -28,7 +28,7 @@ export function Proyecto5Page({ onBack }: ProyectoPageProps) {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
           <p className="text-[11px] uppercase tracking-widest text-neutral-500 mb-2">
-            Categoria 5 / Vina del Mar
+            Viviendas modulares / Viña del Mar, V Región
           </p>
           <h1 className="text-2xl md:text-4xl font-bold uppercase tracking-tight">
             Proyecto 5

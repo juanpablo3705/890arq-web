@@ -220,3 +220,197 @@ body {
 .concept-node:focus-within .concept-txt {
   -webkit-text-stroke-color: #e60000;
 }
+
+/* menu superior de filtros por tipologia en proyectos */
+.project-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 28px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  background-color: transparent;
+  color: #000000;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.project-filter-btn:hover {
+  border-bottom-color: var(--cat-hover);
+}
+
+.project-filter-btn[aria-pressed="true"] {
+  background-color: var(--cat-bg);
+  color: var(--cat-fg);
+  border-color: var(--cat-bg);
+  border-bottom-color: var(--cat-bg);
+}
+
+.project-filter-btn:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 3px;
+}
+
+@media (pointer: coarse) {
+  .project-filter-btn {
+    min-block-size: 36px;
+    padding: 6px 10px;
+  }
+}
+
+/* tarjeta de proyecto con container query y trigger extendido */
+.project-card {
+  container-type: inline-size;
+  position: relative;
+}
+
+.project-card-trigger::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.project-card-trigger:focus-visible {
+  outline: none;
+}
+
+.project-card:has(.project-card-trigger:focus-visible) {
+  outline: 2px solid #000000;
+  outline-offset: 6px;
+}
+
+.project-card-img {
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-card:has(.project-card-trigger:hover) .project-card-img,
+.project-card:has(.project-card-trigger:focus-visible) .project-card-img {
+  transform: scale(1.03);
+}
+
+.project-vertical-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  background-color: var(--cat-bg);
+  color: var(--cat-fg);
+  padding: 9px 5px;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.project-id-box {
+  border: 1px solid var(--cat-box-border);
+  background-color: #ffffff;
+  color: var(--cat-box-text);
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.project-card:has(.project-card-trigger:hover) .project-id-box,
+.project-card:has(.project-card-trigger:focus-visible) .project-id-box {
+  background-color: var(--cat-bg);
+  border-color: var(--cat-bg);
+  color: var(--cat-fg);
+}
+
+.project-card-title {
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.project-card-meta {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+@container (min-width: 310px) {
+  .project-vertical-tag {
+    font-size: 12px;
+    padding: 9px 5px;
+  }
+
+  .project-card-title {
+    font-size: 14px;
+  }
+
+  .project-card-meta {
+    font-size: 12px;
+  }
+}
+
+/* soporte de alto contraste del sistema (forced colors) */
+@media (forced-colors: active) {
+  .project-filter-btn[aria-pressed="true"] {
+    background-color: Highlight;
+    color: HighlightText;
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+  }
+
+  .project-vertical-tag {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* transicion de reordenamiento suave al filtrar la grilla de proyectos */
+:root {
+  view-transition-name: none;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+.project-card-item {
+  view-transition-class: project-card;
+}
+
+::view-transition-group(.project-card) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-new(.project-card):only-child {
+  animation-name: project-card-in;
+  animation-duration: 0.32s;
+  animation-timing-function: ease-out;
+}
+
+::view-transition-old(.project-card):only-child {
+  animation-name: project-card-out;
+  animation-duration: 0.24s;
+  animation-timing-function: ease-in;
+}
+
+@keyframes project-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes project-card-out {
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card-img {
+    transition: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { CATEGORIES, PROJECTS_DATA } from "@/data/projects";
+import { flushSync } from "react-dom";
+import { CATEGORIES, CATEGORY_THEMES, PROJECTS_DATA } from "@/data/projects";
 import { CategoryId } from "@/types/domain";
 import { useCanvas } from "@/components/canvas/CanvasContext";
 import { ProjectDetailRenderer } from "@/components/projects/ProjectDetailRenderer";
 
-// seccion de proyectos con filtro por categoria y transicion a detalle
+// seccion de proyectos con filtro por tipologia y transicion a detalle
 export function ProyectosSection() {
   const {
+    activeSection,
     activeProjectSlug,
     selectedCategory,
     openProject,
@@ -17,44 +19,10 @@ export function ProyectosSection() {
   } = useCanvas();
 
   const sectionRef = useRef<HTMLElement>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "detail">("grid");
   const [isGridFadedOut, setIsGridFadedOut] = useState(false);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
-  const [collapseHiddenCards, setCollapseHiddenCards] = useState(false);
+  const [filterAnnouncement, setFilterAnnouncement] = useState("");
   const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const filterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // sincroniza cuando el contexto resetea el proyecto al volver al home con el logo superior izquierdo
-  useEffect(() => {
-    if (activeProjectSlug === null && viewMode === "detail") {
-      setViewMode("grid");
-      setIsGridFadedOut(false);
-      setIsDetailVisible(false);
-    }
-  }, [activeProjectSlug, viewMode]);
-
-  // controla el colapso suave tras la animacion de difuminacion del filtro de categorias
-  useEffect(() => {
-    if (filterTimerRef.current) {
-      clearTimeout(filterTimerRef.current);
-      filterTimerRef.current = null;
-    }
-
-    if (selectedCategory === null) {
-      setCollapseHiddenCards(false);
-    } else {
-      setCollapseHiddenCards(false);
-      filterTimerRef.current = setTimeout(() => {
-        setCollapseHiddenCards(true);
-      }, 450);
-    }
-
-    return () => {
-      if (filterTimerRef.current) {
-        clearTimeout(filterTimerRef.current);
-      }
-    };
-  }, [selectedCategory]);
 
   useEffect(() => {
     return () => {
@@ -71,18 +39,51 @@ export function ProyectosSection() {
     }
   };
 
+  // alterna la categoria activa y anima el reordenamiento con view transitions si el navegador lo soporta
   const handleSelectCategory = (category: CategoryId) => {
-    if (selectedCategory === category) return;
-    setSelectedCategory(category);
+    const nextCategory = selectedCategory === category ? null : category;
+    const visibleCount =
+      nextCategory === null
+        ? PROJECTS_DATA.length
+        : PROJECTS_DATA.filter((p) => p.category === nextCategory).length;
+
+    const announcement =
+      nextCategory === null
+        ? `Mostrando todos los proyectos (${visibleCount})`
+        : `Filtrado por ${nextCategory}: ${visibleCount} ${
+            visibleCount === 1 ? "proyecto" : "proyectos"
+          }`;
+
+    const applyUpdate = () => {
+      setSelectedCategory(nextCategory);
+      setFilterAnnouncement(announcement);
+    };
+
+    const reducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const doc = document as Document & {
+      startViewTransition?: (callback: () => void) => void;
+    };
+
+    if (typeof doc.startViewTransition === "function" && !reducedMotion) {
+      doc.startViewTransition(() => {
+        flushSync(applyUpdate);
+      });
+    } else {
+      applyUpdate();
+    }
   };
 
   const handleOpenProject = (slug: string) => {
     if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
     setIsGridFadedOut(true);
+    setIsDetailVisible(false);
 
     fadeTimerRef.current = setTimeout(() => {
       openProject(slug);
-      setViewMode("detail");
+      setIsGridFadedOut(false);
       scrollParentToTop();
       requestAnimationFrame(() => {
         setIsDetailVisible(true);
@@ -95,8 +96,8 @@ export function ProyectosSection() {
     setIsDetailVisible(false);
 
     fadeTimerRef.current = setTimeout(() => {
+      setIsGridFadedOut(true);
       closeProject();
-      setViewMode("grid");
       scrollParentToTop();
       requestAnimationFrame(() => {
         setIsGridFadedOut(false);
@@ -104,105 +105,151 @@ export function ProyectosSection() {
     }, 450);
   };
 
+  const visibleProjects =
+    selectedCategory === null
+      ? PROJECTS_DATA
+      : PROJECTS_DATA.filter((project) => project.category === selectedCategory);
+
+  const isDetailView = activeProjectSlug !== null;
+
   return (
     <section
       ref={sectionRef}
       aria-label="Proyectos 890 ARQ"
-      className="w-full min-h-screen bg-white pt-28 pb-32 px-6 md:px-16"
+      className="w-full min-h-screen bg-white pt-32 pb-32 px-6 md:px-16"
     >
       <div className="w-full max-w-[1140px] mx-auto lg:pl-[110px]">
-        {viewMode === "grid" ? (
+        {!isDetailView ? (
           <div
             className={`transition-opacity duration-500 ${
               isGridFadedOut ? "opacity-0 pointer-events-none" : "opacity-100"
             }`}
           >
-            {/* barra superior de categorias */}
-            <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-black pb-6 mb-14">
-              <h2 className="font-mono text-lg md:text-xl font-bold tracking-tight text-black uppercase">
+            {/* barra superior con titulo y filtros por tipologia */}
+            <header className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 border-b border-black pb-5 mb-12">
+              <h2 className="font-mono text-lg md:text-xl font-bold tracking-tight text-black uppercase shrink-0">
                 Proyectos
               </h2>
 
-              <nav
-                aria-label="Filtro de categorías de proyectos"
-                className="flex flex-wrap items-center gap-x-6 gap-y-3"
+              <div
+                role="group"
+                aria-label="Filtrar proyectos por tipología"
+                className="flex flex-wrap items-center gap-x-2.5 gap-y-2"
               >
                 {CATEGORIES.map((category) => {
                   const isActive = selectedCategory === category;
+                  const theme = CATEGORY_THEMES[category];
                   return (
                     <button
                       key={category}
                       type="button"
+                      aria-pressed={isActive}
                       onClick={() => handleSelectCategory(category)}
-                      className={`font-mono text-xs md:text-[13px] tracking-tight cursor-pointer transition-colors duration-200 pb-0.5 border-b ${
-                        isActive
-                          ? "text-[#E60000] border-[#E60000] font-bold"
-                          : "text-black border-transparent hover:text-[#E60000]"
-                      }`}
+                      style={
+                        {
+                          "--cat-bg": theme.highlightBg,
+                          "--cat-fg": theme.highlightText,
+                          "--cat-hover": theme.hoverAccent,
+                        } as React.CSSProperties
+                      }
+                      className="project-filter-btn font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
                     >
                       {category}
                     </button>
                   );
                 })}
-              </nav>
+              </div>
             </header>
 
-            {/* grilla de 3 columnas en blanco y negro */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
-              {PROJECTS_DATA.map((project) => {
-                const matchesCategory =
-                  selectedCategory === null ||
-                  project.category === selectedCategory;
+            <p className="sr-only" aria-live="polite" aria-atomic="true">
+              {filterAnnouncement}
+            </p>
 
+            {/* grilla de 3 columnas con tarjetas de tipologia */}
+            <ul
+              role="list"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-14"
+            >
+              {visibleProjects.map((project) => {
+                const theme = CATEGORY_THEMES[project.category];
                 return (
-                  <article
+                  <li
                     key={project.id}
-                    onClick={() =>
-                      matchesCategory && handleOpenProject(project.slug)
+                    className="project-card-item"
+                    style={
+                      activeSection === "proyectos"
+                        ? { viewTransitionName: `project-card-${project.id}` }
+                        : undefined
                     }
-                    className={`group cursor-pointer transition-all duration-500 ${
-                      matchesCategory
-                        ? "opacity-100 scale-100"
-                        : `opacity-0 scale-95 pointer-events-none ${
-                            collapseHiddenCards ? "hidden" : ""
-                          }`
-                    }`}
                   >
-                    <div className="flex items-stretch">
-                      {/* texto vertical exterior izquierdo */}
-                      <div className="pr-2 flex items-start justify-center shrink-0">
-                        <span className="[writing-mode:vertical-rl] font-mono text-[11px] leading-none tracking-tight text-black select-none">
-                          {project.verticalLabel}
-                        </span>
-                      </div>
+                    <article
+                      className="project-card flex items-start gap-[7px]"
+                      style={
+                        {
+                          "--cat-bg": theme.highlightBg,
+                          "--cat-fg": theme.highlightText,
+                          "--cat-box-border": theme.boxBorder,
+                          "--cat-box-text": theme.boxText,
+                        } as React.CSSProperties
+                      }
+                    >
+                      {/* franja vertical izquierda con nombre y color de categoria */}
+                      <span className="project-vertical-tag font-mono font-normal tracking-[0.01em] whitespace-nowrap select-none shrink-0">
+                        {project.category}
+                      </span>
 
-                      {/* columna derecha con imagen y pie de tarjeta */}
-                      <div className="flex-1 flex flex-col">
-                        {/* imagen de portada en blanco y negro */}
-                        <div className="w-full aspect-[4/5] border border-black overflow-hidden bg-neutral-100">
+                      {/* columna principal: fotografia y ficha inferior */}
+                      <div className="flex-1 min-w-0 flex flex-col">
+                        <div className="w-full aspect-[15/16] border border-black overflow-hidden bg-neutral-100">
                           <img
                             src={project.thumbnail}
-                            alt={project.title}
-                            className="w-full h-full object-cover grayscale contrast-110 transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                            alt={`${project.title} — ${project.category}, ${project.location}`}
+                            decoding="async"
+                            className="project-card-img w-full h-full object-cover"
                           />
                         </div>
 
-                        {/* fila inferior con titulo y codigo tecnico */}
-                        <div className="pt-3 flex items-start justify-between gap-4">
-                          <h3 className="font-mono text-[13px] font-normal text-black leading-snug group-hover:text-[#E60000] transition-colors">
-                            {project.title}
-                          </h3>
+                        {/* fila inferior con titulo, ubicacion, superficie y caja de id */}
+                        <div className="pt-2.5 flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <h3 className="project-card-title font-mono tracking-[-0.01em] text-black uppercase">
+                              <button
+                                type="button"
+                                onClick={() => handleOpenProject(project.slug)}
+                                className="project-card-trigger text-left cursor-pointer"
+                              >
+                                <span className="font-normal">
+                                  {project.prefix}{" "}
+                                </span>
+                                <span className="font-bold italic">
+                                  {project.name}
+                                </span>
+                              </button>
+                            </h3>
 
-                          <span className="border border-black px-2 py-1 text-xs font-mono leading-none text-black shrink-0 group-hover:border-[#E60000] group-hover:text-[#E60000] transition-colors">
-                            {project.code}
-                          </span>
+                            <p className="project-card-meta mt-1 font-mono font-normal text-black">
+                              {project.location}
+                            </p>
+                            <p className="project-card-meta font-mono font-normal text-black">
+                              {project.area}
+                            </p>
+                          </div>
+
+                          <div className="project-id-box shrink-0 w-[56px] min-h-[48px] flex flex-col items-center justify-center gap-[1px] text-center px-1.5 py-1.5 font-mono leading-[1.15]">
+                            <span className="text-[10px] tracking-[0.04em] font-normal">
+                              PROY
+                            </span>
+                            <span className="text-[12px] font-semibold tabular-nums">
+                              {project.code}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </article>
+                    </article>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         ) : (
           /* vista de proyecto individual con difuminacion inversa */

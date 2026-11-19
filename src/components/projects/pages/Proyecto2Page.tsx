@@ -29,7 +29,7 @@ export function Proyecto2Page({ onBack }: ProyectoPageProps) {
         <div className="border border-black p-6 flex flex-col gap-6">
           <div>
             <p className="text-[11px] uppercase tracking-wider text-neutral-500 mb-1">
-              Categoria 2 / Sistema Modular
+              Regularización / Colliguay, V Región
             </p>
             <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight">
               Proyecto 2
@@ -43,7 +43,7 @@ export function Proyecto2Page({ onBack }: ProyectoPageProps) {
             </div>
             <div className="flex justify-between">
               <span className="text-neutral-500">Tipología</span>
-              <span className="font-bold">Categoria 2</span>
+              <span className="font-bold">Regularización</span>
             </div>
             <div className="flex justify-between">
               <span className="text-neutral-500">Estructura</span>

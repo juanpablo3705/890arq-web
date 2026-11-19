@@ -28,7 +28,7 @@ export function Proyecto1Page({ onBack }: ProyectoPageProps) {
       <header className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-6 items-end mb-10">
         <div>
           <p className="text-[11px] uppercase tracking-widest text-neutral-500 mb-2">
-            Categoria 1 / Region de Valparaiso
+            Arquitectura / Región de Valparaíso
           </p>
           <h1 className="text-2xl md:text-4xl font-bold tracking-tight uppercase">
             Proyecto 1
@@ -73,7 +73,7 @@ export function Proyecto1Page({ onBack }: ProyectoPageProps) {
           <span className="block text-[10px] uppercase text-neutral-500">
             Categoría
           </span>
-          <span className="font-bold">Categoria 1</span>
+          <span className="font-bold">Arquitectura</span>
         </div>
       </div>
 

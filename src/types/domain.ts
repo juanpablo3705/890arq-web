@@ -1,15 +1,31 @@
 // tipos base del dominio
 export type SectionId = 'home' | 'proyectos' | 'oficina' | 'contacto' | 'cotizaciones';
 
-export type CategoryId = 'Categoria 1' | 'Categoria 2' | 'Categoria 3' | 'Categoria 4' | 'Categoria 5';
+export type CategoryId =
+  | 'Arquitectura'
+  | 'Regularización'
+  | 'Construcción'
+  | 'Especialidades técnicas'
+  | 'Viviendas modulares';
+
+export interface CategoryTheme {
+  highlightBg: string;
+  highlightText: string;
+  boxBorder: string;
+  boxText: string;
+  hoverAccent: string;
+}
 
 export interface ProjectItem {
   id: string;
   slug: string;
   code: string;
+  prefix: string;
+  name: string;
   title: string;
+  location: string;
+  area: string;
   category: CategoryId;
-  verticalLabel: string;
   thumbnail: string;
   excerpt: string;
 }
