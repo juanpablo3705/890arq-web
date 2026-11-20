@@ -1,12 +1,17 @@
 // tipos base del dominio
-export type SectionId = 'home' | 'proyectos' | 'oficina' | 'contacto' | 'cotizaciones';
+export type SectionId =
+  | "home"
+  | "proyectos"
+  | "oficina"
+  | "contacto"
+  | "cotizaciones";
 
 export type CategoryId =
-  | 'Arquitectura'
-  | 'Regularización'
-  | 'Construcción'
-  | 'Especialidades técnicas'
-  | 'Viviendas modulares';
+  | "Arquitectura"
+  | "Regularización"
+  | "Construcción"
+  | "Especialidades técnicas"
+  | "Viviendas modulares";
 
 export interface CategoryTheme {
   highlightBg: string;
@@ -14,6 +19,32 @@ export interface CategoryTheme {
   boxBorder: string;
   boxText: string;
   hoverAccent: string;
+}
+
+export type ProjectLayoutVariant =
+  | "panoramic-essay"
+  | "asymmetric-dossier"
+  | "atelier-diptych"
+  | "split-monograph"
+  | "cinematic-walkthrough"
+  | "blueprint-atlas"
+  | "minimal-plate"
+  | "technical-blueprint"
+  | "modular-triptych";
+
+export interface ProjectMediaItem {
+  path: string;
+  url: string;
+  alt: string;
+  caption?: string;
+  width: number;
+  height: number;
+  isDrawing?: boolean;
+}
+
+export interface ProjectSpec {
+  label: string;
+  value: string;
 }
 
 export interface ProjectItem {
@@ -24,10 +55,15 @@ export interface ProjectItem {
   name: string;
   title: string;
   location: string;
+  cardLocation: string;
   area: string;
   category: CategoryId;
   thumbnail: string;
-  excerpt: string;
+  caseDescription: string;
+  architectureRationale?: string;
+  specs: ProjectSpec[];
+  layout: ProjectLayoutVariant;
+  gallery: ProjectMediaItem[];
 }
 
 export interface ContactFormPayload {

@@ -1,38 +1,56 @@
 "use client";
 
 import React from "react";
-import { Proyecto1Page } from "./pages/Proyecto1Page";
-import { Proyecto2Page } from "./pages/Proyecto2Page";
-import { Proyecto3Page } from "./pages/Proyecto3Page";
-import { Proyecto4Page } from "./pages/Proyecto4Page";
-import { Proyecto5Page } from "./pages/Proyecto5Page";
+import { ProjectLayoutVariant } from "@/types/domain";
+import {
+  getProjectMeta,
+  ProjectLayoutProps,
+  ProjectPageShell,
+} from "./ProjectDetailChrome";
+import { PanoramicEssayLayout } from "./layouts/PanoramicEssayLayout";
+import { AsymmetricDossierLayout } from "./layouts/AsymmetricDossierLayout";
+import { AtelierDiptychLayout } from "./layouts/AtelierDiptychLayout";
+import { SplitMonographLayout } from "./layouts/SplitMonographLayout";
+import { CinematicWalkthroughLayout } from "./layouts/CinematicWalkthroughLayout";
+import { BlueprintAtlasLayout } from "./layouts/BlueprintAtlasLayout";
+import { MinimalPlateLayout } from "./layouts/MinimalPlateLayout";
+import { TechnicalBlueprintLayout } from "./layouts/TechnicalBlueprintLayout";
+import { ModularTriptychLayout } from "./layouts/ModularTriptychLayout";
 
 interface ProjectDetailRendererProps {
   slug: string;
   onBack: () => void;
 }
 
-// registro mapeador de cada slug de proyecto a su componente de diseno libre
-const PROJECT_COMPONENTS: Record<
-  string,
-  React.ComponentType<{ onBack: () => void }>
+// registro de arquitecturas editoriales por proyecto
+const LAYOUT_COMPONENTS: Record<
+  ProjectLayoutVariant,
+  React.ComponentType<ProjectLayoutProps>
 > = {
-  "proyecto-1": Proyecto1Page,
-  "proyecto-2": Proyecto2Page,
-  "proyecto-3": Proyecto3Page,
-  "proyecto-4": Proyecto4Page,
-  "proyecto-5": Proyecto5Page,
+  "panoramic-essay": PanoramicEssayLayout,
+  "asymmetric-dossier": AsymmetricDossierLayout,
+  "atelier-diptych": AtelierDiptychLayout,
+  "split-monograph": SplitMonographLayout,
+  "cinematic-walkthrough": CinematicWalkthroughLayout,
+  "blueprint-atlas": BlueprintAtlasLayout,
+  "minimal-plate": MinimalPlateLayout,
+  "technical-blueprint": TechnicalBlueprintLayout,
+  "modular-triptych": ModularTriptychLayout,
 };
 
+// renderizador unificado con tope y pie comunes editables para los 30 proyectos
 export function ProjectDetailRenderer({
   slug,
   onBack,
 }: ProjectDetailRendererProps) {
-  const ProjectPageComponent = PROJECT_COMPONENTS[slug];
+  const { project, theme } = getProjectMeta(slug);
+  const LayoutComponent = LAYOUT_COMPONENTS[project.layout];
 
-  if (!ProjectPageComponent) {
-    return null;
-  }
-
-  return <ProjectPageComponent onBack={onBack} />;
+  return (
+    <ProjectPageShell project={project} theme={theme} onBack={onBack}>
+      {(onZoom) => (
+        <LayoutComponent project={project} theme={theme} onZoom={onZoom} />
+      )}
+    </ProjectPageShell>
+  );
 }

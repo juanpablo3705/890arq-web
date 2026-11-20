@@ -224,7 +224,7 @@ export function ProyectosSection() {
               role="list"
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-14"
             >
-              {visibleProjects.map((project) => {
+              {visibleProjects.map((project, idx) => {
                 const theme = CATEGORY_THEMES[project.category];
                 return (
                   <li
@@ -252,14 +252,17 @@ export function ProyectosSection() {
                         {project.category}
                       </span>
 
-                      {/* columna principal: fotografia y ficha inferior */}
+                      {/* columna principal: portada cuadrada uniforme y ficha inferior */}
                       <div className="flex-1 min-w-0 flex flex-col">
-                        <div className="w-full aspect-[15/16] border border-black overflow-hidden bg-neutral-100">
+                        <div className="w-full aspect-square border border-black overflow-hidden bg-neutral-100">
                           <img
                             src={project.thumbnail}
-                            alt={`${project.title} — ${project.category}, ${project.location}`}
+                            alt={`${project.title} — ${project.category}, ${project.cardLocation}`}
+                            width={900}
+                            height={900}
+                            loading={idx < 6 ? "eager" : "lazy"}
                             decoding="async"
-                            className="project-card-img w-full h-full object-cover"
+                            className="project-card-img block w-full h-full object-cover"
                           />
                         </div>
 
@@ -272,19 +275,27 @@ export function ProyectosSection() {
                                 onClick={() => handleOpenProject(project.slug)}
                                 className="project-card-trigger text-left cursor-pointer"
                               >
-                                <span className="font-normal">
-                                  {project.prefix}{" "}
-                                </span>
-                                <span className="font-bold italic">
-                                  {project.name}
-                                </span>
+                                {project.prefix ? (
+                                  <>
+                                    <span className="font-normal">
+                                      {project.prefix}{" "}
+                                    </span>
+                                    <span className="font-bold italic">
+                                      {project.name}
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span className="font-bold italic">
+                                    {project.name}
+                                  </span>
+                                )}
                               </button>
                             </h2>
 
                             <p className="project-card-meta mt-1 font-mono font-normal text-black">
-                              {project.location}
+                              {project.cardLocation}
                             </p>
-                            <p className="project-card-meta font-mono font-normal text-black">
+                            <p className="project-card-meta font-mono font-normal text-black tabular-nums">
                               {project.area}
                             </p>
                           </div>
