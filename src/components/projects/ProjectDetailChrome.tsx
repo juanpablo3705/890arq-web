@@ -8,6 +8,7 @@ import {
   ProjectMediaItem,
   ProjectSpec,
 } from "@/types/domain";
+import { LightboxLoupe } from "./LightboxLoupe";
 
 export interface ResolvedProjectMeta {
   project: ProjectItem;
@@ -100,7 +101,10 @@ export function ProjectPageShell({
   children: (onZoom: (item: ProjectMediaItem) => void) => React.ReactNode;
 }) {
   const [zoomed, setZoomed] = useState<ProjectMediaItem | null>(null);
+  const [loupeZoom, setLoupeZoom] = useState<number>(2.6);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  // piloto de lupa optica activo solo en proyecto 01
+  const enableLoupe = project.slug === "proyecto-01";
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -147,20 +151,35 @@ export function ProjectPageShell({
               <span className="text-[#737373] truncate">
                 {zoomed.caption || zoomed.alt}
               </span>
-              <button
-                type="button"
-                onClick={closeLightbox}
-                className="site-inline-link font-mono text-xs cursor-pointer shrink-0"
-              >
-                Cerrar ×
-              </button>
+              <div className="flex items-center gap-4 shrink-0">
+                {enableLoupe && (
+                  <span className="hidden sm:inline text-[11px] text-[#737373] tabular-nums">
+                    Lupa {loupeZoom.toFixed(1)}×
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={closeLightbox}
+                  className="site-inline-link font-mono text-xs cursor-pointer shrink-0"
+                >
+                  Cerrar ×
+                </button>
+              </div>
             </div>
-            <div className="overflow-auto flex-1 flex items-center justify-center bg-white">
-              <img
-                src={zoomed.url}
-                alt={zoomed.alt}
-                className="block max-w-full max-h-[78dvh] w-auto h-auto object-contain"
-              />
+            <div
+              className={`flex-1 flex items-center justify-center bg-white ${
+                enableLoupe ? "overflow-visible" : "overflow-auto"
+              }`}
+            >
+              {enableLoupe ? (
+                <LightboxLoupe item={zoomed} onZoomChange={setLoupeZoom} />
+              ) : (
+                <img
+                  src={zoomed.url}
+                  alt={zoomed.alt}
+                  className="block max-w-full max-h-[78dvh] w-auto h-auto object-contain"
+                />
+              )}
             </div>
           </div>
         )}
