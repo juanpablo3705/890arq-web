@@ -29,8 +29,7 @@ export function getProjectMeta(slug: string): ResolvedProjectMeta {
   return { project, theme };
 }
 
-interface ProjectBarProps {
-  project: ProjectItem;
+interface ProjectNavBarProps {
   theme: CategoryTheme;
   onBack: () => void;
 }
@@ -87,41 +86,23 @@ function useMeasuredSpanWidth(
   return width;
 }
 
-// barra superior comun para las 30 paginas (editable masivamente desde aqui)
-export function ProjectTopBar({ project, theme, onBack }: ProjectBarProps) {
+// barra superior comun para las 30 paginas (alineada al pixel con el menu de proyectos)
+export function ProjectTopBar({ theme, onBack }: ProjectNavBarProps) {
   const topGroupRef = useRef<HTMLDivElement>(null);
-  const lineWidth = useMeasuredSpanWidth(topGroupRef, project.code);
+  const lineWidth = useMeasuredSpanWidth(topGroupRef);
 
   return (
     <header className="mb-12 flex justify-end">
       <div className="w-fit max-w-full flex flex-col items-end">
-        <div
-          ref={topGroupRef}
-          className="flex flex-wrap items-end justify-end gap-x-5 gap-y-2"
-        >
+        <div ref={topGroupRef} className="flex items-center justify-end">
           <button
             type="button"
             onClick={onBack}
             style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
             className="project-bar-link font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
           >
-            <span className="translate-y-[2px]">&lt; Volver a proyectos</span>
+            &lt; Volver a proyectos
           </button>
-
-          <div
-            style={{
-              borderColor: theme.boxBorder,
-              color: theme.boxText,
-            }}
-            className="w-[56px] min-h-[48px] border bg-white flex flex-col items-center justify-center gap-[1px] text-center px-1.5 py-1.5 font-mono leading-[1.15] shrink-0"
-          >
-            <span className="text-[10px] tracking-[0.04em] font-normal uppercase">
-              PROY
-            </span>
-            <span className="text-[12px] font-semibold tabular-nums">
-              {project.code}
-            </span>
-          </div>
         </div>
 
         <div
@@ -135,13 +116,7 @@ export function ProjectTopBar({ project, theme, onBack }: ProjectBarProps) {
 }
 
 // pie de retorno comun para las 30 paginas (editable masivamente desde aqui)
-export function ProjectBackLink({
-  theme,
-  onBack,
-}: {
-  theme: CategoryTheme;
-  onBack: () => void;
-}) {
+export function ProjectBackLink({ theme, onBack }: ProjectNavBarProps) {
   const linkGroupRef = useRef<HTMLDivElement>(null);
   const lineWidth = useMeasuredSpanWidth(linkGroupRef);
 
@@ -154,12 +129,12 @@ export function ProjectBackLink({
           style={lineWidth !== null ? { width: `${lineWidth}px` } : undefined}
         />
 
-        <div ref={linkGroupRef} className="mt-5 flex items-start justify-end">
+        <div ref={linkGroupRef} className="mt-5 flex items-center justify-end">
           <button
             type="button"
             onClick={onBack}
             style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
-            className="project-bar-link project-bar-link--bottom font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
+            className="project-bar-link font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
           >
             &lt; Volver a proyectos
           </button>
@@ -202,8 +177,11 @@ export function ProjectPageShell({
   };
 
   return (
-    <article className="w-full font-mono text-black">
-      <ProjectTopBar project={project} theme={theme} onBack={onBack} />
+    <article
+      aria-label={project.title}
+      className="w-full font-mono text-black"
+    >
+      <ProjectTopBar theme={theme} onBack={onBack} />
 
       {children(setZoomed)}
 
@@ -278,7 +256,31 @@ export function ProjectVerticalTag({
   );
 }
 
-// titulo dual regular + bold italic identico a las tarjetas de proyectos
+// caja numerica de proyecto con misma geometria que las tarjetas del catalogo
+export function ProjectCodeBadge({
+  code,
+  theme,
+}: {
+  code: string;
+  theme: CategoryTheme;
+}) {
+  return (
+    <div
+      style={{
+        borderColor: theme.boxBorder,
+        color: theme.boxText,
+      }}
+      className="w-[56px] min-h-[48px] border bg-white flex flex-col items-center justify-center gap-[1px] text-center px-1.5 py-1.5 font-mono leading-[1.15] shrink-0"
+    >
+      <span className="text-[10px] tracking-[0.04em] font-normal uppercase">
+        PROY
+      </span>
+      <span className="text-[12px] font-semibold tabular-nums">{code}</span>
+    </div>
+  );
+}
+
+// titulo dual regular + bold italic acompañado a la izquierda por la caja PROY / XX
 export function ProjectTitle({
   project,
   className = "text-xl md:text-2xl",
@@ -286,19 +288,24 @@ export function ProjectTitle({
   project: ProjectItem;
   className?: string;
 }) {
+  const theme = CATEGORY_THEMES[project.category];
+
   return (
-    <h1
-      className={`font-mono leading-[1.2] tracking-[-0.01em] text-black uppercase ${className}`}
-    >
-      {project.prefix ? (
-        <>
-          <span className="font-normal">{project.prefix} </span>
+    <div className="flex items-center gap-3.5 md:gap-4">
+      <ProjectCodeBadge code={project.code} theme={theme} />
+      <h1
+        className={`min-w-0 flex-1 font-mono leading-[1.2] tracking-[-0.01em] text-black uppercase ${className}`}
+      >
+        {project.prefix ? (
+          <>
+            <span className="font-normal">{project.prefix} </span>
+            <span className="font-bold italic">{project.name}</span>
+          </>
+        ) : (
           <span className="font-bold italic">{project.name}</span>
-        </>
-      ) : (
-        <span className="font-bold italic">{project.name}</span>
-      )}
-    </h1>
+        )}
+      </h1>
+    </div>
   );
 }
 

@@ -140,53 +140,34 @@ body {
   }
 }
 
-/* enlace de retorno en cabecera y pie de proyecto alineado con separador adaptable */
+/* enlace de retorno en cabecera y pie con mismas metricas que el menu de proyectos */
 .project-bar-link {
-  position: relative;
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   min-block-size: 28px;
-  padding: 0;
-  border: 0;
-  color: #000000;
-  line-height: 1;
-  transition: color 180ms ease;
-}
-
-.project-bar-link--bottom {
-  align-items: flex-start;
-}
-
-.project-bar-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
   background-color: transparent;
-  transition: background-color 180ms ease;
+  color: #000000;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
 }
 
-.project-bar-link:not(.project-bar-link--bottom)::after {
-  bottom: -6px;
-}
-
-.project-bar-link--bottom::after {
-  top: calc(1em + 4px);
-}
-
-.project-bar-link:hover::after {
-  background-color: var(--link-hover, #e60000);
+.project-bar-link:hover {
+  border-bottom-color: var(--link-hover, #e60000);
 }
 
 .project-bar-link:focus-visible {
   outline: 2px solid #000000;
-  outline-offset: 4px;
+  outline-offset: 3px;
 }
 
 @media (pointer: coarse) {
   .project-bar-link {
     min-block-size: 36px;
+    padding: 6px 10px;
   }
 }
 
