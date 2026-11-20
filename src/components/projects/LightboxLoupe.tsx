@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ProjectMediaItem } from "@/types/domain";
 
-const LOUPE_SIZE = 232;
+const LOUPE_SIZE = 328;
 const LOUPE_RADIUS = LOUPE_SIZE / 2;
 const MIN_ZOOM = 1.8;
 const MAX_ZOOM = 5;
