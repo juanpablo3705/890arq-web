@@ -663,7 +663,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "Proyecto de diseño, proyección y regularización de dos galpones industriales de 1.000 m² cada uno, emplazados en el sector de la Carretera La Pólvora. El desarrollo contempló la resolución integral de las exigencias técnicas, normativas y urbanísticas propias de instalaciones de carácter industrial y logístico.",
     specs: [
       { label: "Ubicación", value: "Placilla de Peñuelas, Valparaíso" },
-      { label: "Superficie", value: "2.000 m² (2 galpones de 1.000 m²)" },
+      { label: "Superficie", value: "2.000 m²" },
       { label: "Alcance", value: "Diseño, proyección y regularización" },
     ],
     layout: "blueprint-atlas",
@@ -721,7 +721,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "Proyecto de fusión inmobiliaria para cuatro parcelas de 5.000 m² cada una, ubicadas en un área de expansión urbana. Se ejecutaron estudios normativos de cabida y factibilidad, considerando las variables espaciales, legales y urbanísticas del sector.",
     specs: [
       { label: "Ubicación", value: "Placilla de Peñuelas, Valparaíso" },
-      { label: "Superficie", value: "20.000 m² (4 parcelas de 5.000 m²)" },
+      { label: "Superficie", value: "20.000 m²" },
       { label: "Alcance", value: "Fusión predial y estudio de cabida" },
     ],
     layout: "minimal-plate",
@@ -784,11 +784,11 @@ export const PROJECTS_DATA: ProjectItem[] = [
     category: "Regularización",
     thumbnail: getStorageUrl("portadas/14.webp"),
     caseDescription:
-      "Regularización y diseño integral de vivienda unifamiliar. El encargo incluyó el desarrollo del proyecto de arquitectura, especialidad hidrosanitaria y estructural, gestionando de manera exitosa la aprobación ante la SEREMI y la Dirección de Obras de la Municipalidad de Zapallar.",
+      "Regularización y diseño integral de vivienda unifamiliar. El encargo incluyó el desarrollo del proyecto de arquitectura, especialidad hidrosanitaria y estructural, gestionando de manera exitosa la aprobación ante la SEREMI y la Dirección de Obras Municipales.",
     specs: [
       { label: "Ubicación", value: "Zapallar, Región de Valparaíso" },
       { label: "Especialidades", value: "Arquitectura, estructura e hidrosanitaria" },
-      { label: "Aprobación", value: "SEREMI y DOM Municipalidad de Zapallar" },
+      { label: "Aprobación", value: "SEREMI y Dirección de Obras Municipales" },
     ],
     layout: "blueprint-atlas",
     gallery: [
@@ -973,7 +973,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     category: "Construcción",
     thumbnail: getStorageUrl("portadas/18.webp"),
     caseDescription:
-      "Proyecto integral de diseño y construcción en Calle Chacabuco, gestionado íntegramente por la oficina desde el anteproyecto arquitectónico hasta la ejecución material en obra. Los trabajos incluyeron la administración de mano de obra especializada, control de costos, logística, inspección técnica de obras (ITO), resolución de detalles constructivos y la ejecución del paisajismo exterior.",
+      "Proyecto integral de diseño y construcción gestionado íntegramente por la oficina desde el anteproyecto arquitectónico hasta la ejecución material en obra. Los trabajos incluyeron la administración de mano de obra especializada, control de costos, logística, inspección técnica de obras (ITO), resolución de detalles constructivos y la ejecución del paisajismo exterior.",
     specs: [
       { label: "Ubicación", value: "Calle Chacabuco, Quillota" },
       { label: "Alcance", value: "Anteproyecto, ejecución, ITO y paisajismo" },
@@ -1348,12 +1348,12 @@ export const PROJECTS_DATA: ProjectItem[] = [
     category: "Viviendas modulares",
     thumbnail: getStorageUrl("portadas/26.webp"),
     caseDescription:
-      "Sistema de vivienda modular adaptable basado en una retícula de módulos de 5×3 metros (15 m² por módulo), con combinaciones configurables desde los 30 m² hasta los 120 m². El modelo base presentado contempla 60 m² distribuidos en estar, cocina, un baño, dos dormitorios y terraza.",
+      "Sistema de vivienda modular adaptable basado en una retícula de módulos de 5×3 metros (15 m² por módulo), con combinaciones configurables desde los 30 m² hasta los 120 m². El modelo base presentado distribuye estar, cocina, un baño, dos dormitorios y terraza.",
     architectureRationale:
       "El proyecto utiliza el módulo estructural como unidad de medida y articulación espacial, empleando un pasillo central ordenador que agrupa las cápsulas habitacionales. Esta disposición genera un patio interior protegido que otorga privacidad e independencia respecto al contexto territorial en el que se emplace.",
     specs: [
-      { label: "Superficie", value: "60 m² (Configurable de 30 a 120 m²)" },
-      { label: "Módulos", value: "4 unidades base de 15 m² (5×3 m)" },
+      { label: "Superficie", value: "60 m² (base)" },
+      { label: "Módulos", value: "4 unidades base" },
       { label: "Emplazamiento", value: "Modelo estandarizado multi-región" },
     ],
     layout: "panoramic-essay",
@@ -1363,7 +1363,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
         "Vista exterior Casa Módulo F35 junto al lago",
         1672,
         941,
-        { caption: "Configuración base de 4 módulos (60 m²)" }
+        { caption: "Configuración base de 4 módulos" }
       ),
       media(
         "proyecto-26/02.webp",
@@ -1447,7 +1447,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     category: "Viviendas modulares",
     thumbnail: getStorageUrl("portadas/28.webp"),
     caseDescription:
-      "Remodelación parcial de departamento de 56 m² que incluyó la ampliación de la cocina, modificación de tabiquería, renovación parcial de pavimentos y diseño de mobiliario integrado.",
+      "Remodelación parcial de departamento que incluyó la ampliación de la cocina, modificación de tabiquería, renovación parcial de pavimentos y diseño de mobiliario integrado.",
     architectureRationale:
       "Para resolver la desconexión lumínica y espacial entre la cocina y el área social, se eliminó el tabique divisorio, integrando el espacio y permitiendo el paso de la luz natural. Se instaló un sistema modular de muebles ensamblados que funciona como envolvente habitable, adaptado a los requerimientos acústicos y tecnológicos de un usuario dedicado a la producción musical.",
     specs: [
@@ -1493,7 +1493,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     category: "Viviendas modulares",
     thumbnail: getStorageUrl("portadas/29.webp"),
     caseDescription:
-      "Sistema de vivienda modular en base a containers 6346, desarrollado en el valle de Colliguay para resolver el programa habitacional completo mediante módulos prefabricados de rápido montaje.",
+      "Sistema de vivienda modular en base a containers 6346, desarrollado para resolver el programa habitacional completo mediante módulos prefabricados de rápido montaje.",
     architectureRationale:
       "La unidad estructural básica se compone de cuatro contenedores high cube, emplazados con el fin de minimizar circulaciones y articular un patio interior el cual conecta la totalidad de programas de la vivienda unifamiliar.",
     specs: [
@@ -1557,7 +1557,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     architectureRationale:
       "El diseño aborda la escala arquitectónica desde el detalle constructivo hasta la relación volumétrica colectiva y urbana. La propuesta articula de manera simultánea los espacios interiores y exteriores como una unidad vivencial integral, evitando que uno sea mero resultado del otro.",
     specs: [
-      { label: "Superficie", value: "64 m² (2D/2B o variante extendida 3D/3B)" },
+      { label: "Superficie", value: "64 m²" },
       { label: "Estructura", value: "Hormigón y Metalcon" },
       { label: "Contexto", value: "Modelo escalable para conjuntos urbanos" },
     ],

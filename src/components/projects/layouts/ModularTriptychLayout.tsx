@@ -18,11 +18,8 @@ export function ModularTriptychLayout({
 
   return (
     <div className="flex flex-col gap-12 md:gap-14">
-      <header className="flex flex-col md:flex-row md:items-baseline justify-between gap-3">
+      <header>
         <ProjectTitle project={project} />
-        <p className="text-xs text-[#737373] tabular-nums">
-          {project.location} · {project.area}
-        </p>
       </header>
 
       {hero && (
