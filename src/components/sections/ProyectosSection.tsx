@@ -37,16 +37,17 @@ export function ProyectosSection() {
 
     const measureMenuSpan = () => {
       if (cancelled) return;
-      const groupLeft = group.getBoundingClientRect().left;
-      let maxRight = groupLeft;
       const items = group.children;
+      if (items.length === 0) return;
+
+      let minLeft = Number.POSITIVE_INFINITY;
+      let maxRight = Number.NEGATIVE_INFINITY;
       for (let i = 0; i < items.length; i++) {
-        const right = items[i].getBoundingClientRect().right;
-        if (right > maxRight) {
-          maxRight = right;
-        }
+        const rect = items[i].getBoundingClientRect();
+        if (rect.left < minLeft) minLeft = rect.left;
+        if (rect.right > maxRight) maxRight = rect.right;
       }
-      const nextWidth = Math.ceil(maxRight - groupLeft);
+      const nextWidth = Math.ceil(maxRight - minLeft);
       if (nextWidth > 0) {
         setFilterLineWidth((prev) => (prev === nextWidth ? prev : nextWidth));
       }
@@ -169,14 +170,14 @@ export function ProyectosSection() {
               isGridFadedOut ? "opacity-0 pointer-events-none" : "opacity-100"
             }`}
           >
-            {/* barra superior de filtros por tipologia con subrayado adaptable al menu */}
-            <header className="mb-12">
-              <div className="w-fit max-w-full">
+            {/* barra superior de filtros por tipologia alineada a la derecha con subrayado adaptable */}
+            <header className="mb-12 flex justify-end">
+              <div className="w-fit max-w-full flex flex-col items-end">
                 <div
                   ref={filterGroupRef}
                   role="group"
                   aria-label="Filtrar proyectos por tipología"
-                  className="project-filter-group flex items-center gap-x-2.5 gap-y-2"
+                  className="project-filter-group flex items-center justify-end gap-x-2.5 gap-y-2"
                 >
                   {CATEGORIES.map((category) => {
                     const isActive = selectedCategory === category;
@@ -204,7 +205,7 @@ export function ProyectosSection() {
 
                 <div
                   aria-hidden="true"
-                  className="h-px bg-black mt-5 max-w-full"
+                  className="h-px bg-black mt-5 w-full max-w-full"
                   style={
                     filterLineWidth !== null
                       ? { width: `${filterLineWidth}px` }
