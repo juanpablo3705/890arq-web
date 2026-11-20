@@ -106,12 +106,6 @@ const TEAM_MEMBERS = [
   },
 ];
 
-// posicionamiento en grilla: 3 columnas arriba y los 2 ultimos pilares centrados debajo
-const PILLAR_GRID_PLACEMENT: Record<number, string> = {
-  3: "sm:col-span-2 lg:col-[2/span_2]",
-  4: "sm:col-[2/span_2] lg:col-[4/span_2]",
-};
-
 // seccion oficina minimalista y depurada
 export function OficinaSection() {
   const [flippedId, setFlippedId] = useState<string | null>(null);
@@ -232,31 +226,36 @@ export function OficinaSection() {
             <ConceptNetwork />
           </div>
 
-          {/* servicios en grilla tipografica abierta con ultima fila centrada */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-6 gap-x-12 gap-y-12">
+          {/* servicios en indice editorial de 5 filas horizontales (4/8) */}
+          <div className="border-y border-black divide-y divide-black/15">
             {SERVICE_PILLARS.map((pillar, index) => (
               <div
                 key={pillar.emphasis + pillar.prefix}
-                className={PILLAR_GRID_PLACEMENT[index] ?? "sm:col-span-2"}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-y-4 lg:gap-x-12 py-7 md:py-8 items-start"
               >
-                <h2 className="font-mono text-[13px] leading-[1.25] tracking-[-0.01em] text-black uppercase mb-4">
-                  {pillar.prefix ? (
-                    <>
-                      <span className="font-normal">{pillar.prefix} </span>
+                <div className="lg:col-span-4 flex items-baseline gap-4">
+                  <span className="font-mono text-[11px] leading-none text-[#737373] tabular-nums shrink-0">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h2 className="font-mono text-[13px] leading-[1.25] tracking-[-0.01em] text-black uppercase">
+                    {pillar.prefix ? (
+                      <>
+                        <span className="font-normal">{pillar.prefix} </span>
+                        <span className="font-bold italic">
+                          {pillar.emphasis}
+                        </span>
+                      </>
+                    ) : (
                       <span className="font-bold italic">
                         {pillar.emphasis}
                       </span>
-                    </>
-                  ) : (
-                    <span className="font-bold italic">
-                      {pillar.emphasis}
-                    </span>
-                  )}
-                </h2>
+                    )}
+                  </h2>
+                </div>
 
-                <ul className="font-mono text-xs leading-[1.6] font-normal text-black space-y-1.5">
+                <ul className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 font-mono text-xs leading-[1.6] font-normal text-black">
                   {pillar.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2">
+                    <li key={item} className="flex items-start gap-2.5">
                       <span
                         aria-hidden="true"
                         className="text-[#737373] select-none shrink-0"
