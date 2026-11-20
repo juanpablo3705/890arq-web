@@ -18,6 +18,8 @@
 /referencias-visuales/
 /activos-originales
 /activos-originales/
+*.pdf
+*.PDF
 
 # documentacion interna (solo se permite readme)
 *.md
