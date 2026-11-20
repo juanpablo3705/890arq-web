@@ -227,31 +227,24 @@ export function OficinaSection() {
           </div>
 
           {/* servicios en indice editorial de 5 filas horizontales (4/8) */}
-          <div className="border-y border-black divide-y divide-black/15">
-            {SERVICE_PILLARS.map((pillar, index) => (
+          <div className="divide-y divide-black/15">
+            {SERVICE_PILLARS.map((pillar) => (
               <div
                 key={pillar.emphasis + pillar.prefix}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-y-4 lg:gap-x-12 py-7 md:py-8 items-start"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-y-4 lg:gap-x-12 py-7 md:py-8 first:pt-0 last:pb-0 items-start"
               >
-                <div className="lg:col-span-4 flex items-baseline gap-4">
-                  <span className="font-mono text-[11px] leading-none text-[#737373] tabular-nums shrink-0">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h2 className="font-mono text-[13px] leading-[1.25] tracking-[-0.01em] text-black uppercase">
-                    {pillar.prefix ? (
-                      <>
-                        <span className="font-normal">{pillar.prefix} </span>
-                        <span className="font-bold italic">
-                          {pillar.emphasis}
-                        </span>
-                      </>
-                    ) : (
+                <h2 className="lg:col-span-4 font-mono text-[13px] leading-[1.25] tracking-[-0.01em] text-black uppercase">
+                  {pillar.prefix ? (
+                    <>
+                      <span className="font-normal">{pillar.prefix} </span>
                       <span className="font-bold italic">
                         {pillar.emphasis}
                       </span>
-                    )}
-                  </h2>
-                </div>
+                    </>
+                  ) : (
+                    <span className="font-bold italic">{pillar.emphasis}</span>
+                  )}
+                </h2>
 
                 <ul className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 font-mono text-xs leading-[1.6] font-normal text-black">
                   {pillar.items.map((item) => (
