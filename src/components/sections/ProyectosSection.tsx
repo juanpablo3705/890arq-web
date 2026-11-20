@@ -19,57 +19,12 @@ export function ProyectosSection() {
   } = useCanvas();
 
   const sectionRef = useRef<HTMLElement>(null);
-  const filterGroupRef = useRef<HTMLDivElement>(null);
-  const [filterLineWidth, setFilterLineWidth] = useState<number | null>(null);
   const [isGridFadedOut, setIsGridFadedOut] = useState(false);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [filterAnnouncement, setFilterAnnouncement] = useState("");
   const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isDetailView = activeProjectSlug !== null;
-
-  // mide la extension horizontal real del menu de categorias para ajustar su subrayado
-  useEffect(() => {
-    const group = filterGroupRef.current;
-    if (!group || isDetailView) return;
-
-    let cancelled = false;
-
-    const measureMenuSpan = () => {
-      if (cancelled) return;
-      const items = group.children;
-      if (items.length === 0) return;
-
-      let minLeft = Number.POSITIVE_INFINITY;
-      let maxRight = Number.NEGATIVE_INFINITY;
-      for (let i = 0; i < items.length; i++) {
-        const rect = items[i].getBoundingClientRect();
-        if (rect.left < minLeft) minLeft = rect.left;
-        if (rect.right > maxRight) maxRight = rect.right;
-      }
-      const nextWidth = Math.ceil(maxRight - minLeft);
-      if (nextWidth > 0) {
-        setFilterLineWidth((prev) => (prev === nextWidth ? prev : nextWidth));
-      }
-    };
-
-    measureMenuSpan();
-
-    const observer = new ResizeObserver(measureMenuSpan);
-    observer.observe(group);
-    for (let i = 0; i < group.children.length; i++) {
-      observer.observe(group.children[i]);
-    }
-
-    window.addEventListener("resize", measureMenuSpan);
-    document.fonts?.ready.then(measureMenuSpan);
-
-    return () => {
-      cancelled = true;
-      observer.disconnect();
-      window.removeEventListener("resize", measureMenuSpan);
-    };
-  }, [isDetailView]);
 
   useEffect(() => {
     return () => {
@@ -170,49 +125,38 @@ export function ProyectosSection() {
               isGridFadedOut ? "opacity-0 pointer-events-none" : "opacity-100"
             }`}
           >
-            {/* barra superior de filtros por tipologia alineada a la derecha con subrayado adaptable */}
-            <header className="mb-12 flex justify-end">
-              <div className="w-fit max-w-full flex flex-col items-end">
-                <div
-                  ref={filterGroupRef}
-                  role="group"
-                  aria-label="Filtrar proyectos por tipología"
-                  className="project-filter-group flex items-center justify-end gap-x-2.5 gap-y-2"
-                >
-                  {CATEGORIES.map((category) => {
-                    const isActive = selectedCategory === category;
-                    const theme = CATEGORY_THEMES[category];
-                    return (
-                      <button
-                        key={category}
-                        type="button"
-                        aria-pressed={isActive}
-                        onClick={() => handleSelectCategory(category)}
-                        style={
-                          {
-                            "--cat-bg": theme.highlightBg,
-                            "--cat-fg": theme.highlightText,
-                            "--cat-hover": theme.hoverAccent,
-                          } as React.CSSProperties
-                        }
-                        className="project-filter-btn font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
-                      >
-                        {category}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div
-                  aria-hidden="true"
-                  className="h-px bg-black mt-5 w-full max-w-full"
-                  style={
-                    filterLineWidth !== null
-                      ? { width: `${filterLineWidth}px` }
-                      : undefined
-                  }
-                />
+            {/* barra superior de filtros por tipologia alineada a la derecha sobre separador completo */}
+            <header className="mb-12 w-full">
+              <div
+                role="group"
+                aria-label="Filtrar proyectos por tipología"
+                className="project-filter-group flex items-center justify-end gap-x-2.5 gap-y-2"
+              >
+                {CATEGORIES.map((category) => {
+                  const isActive = selectedCategory === category;
+                  const theme = CATEGORY_THEMES[category];
+                  return (
+                    <button
+                      key={category}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => handleSelectCategory(category)}
+                      style={
+                        {
+                          "--cat-bg": theme.highlightBg,
+                          "--cat-fg": theme.highlightText,
+                          "--cat-hover": theme.hoverAccent,
+                        } as React.CSSProperties
+                      }
+                      className="project-filter-btn font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
+                    >
+                      {category}
+                    </button>
+                  );
+                })}
               </div>
+
+              <div aria-hidden="true" className="h-px bg-black mt-5 w-full" />
             </header>
 
             <p className="sr-only" aria-live="polite" aria-atomic="true">

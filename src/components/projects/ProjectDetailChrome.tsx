@@ -34,111 +34,41 @@ interface ProjectNavBarProps {
   onBack: () => void;
 }
 
-// mide la extension horizontal real de los hijos para ajustar el subrayado adaptable
-function useMeasuredSpanWidth(
-  ref: React.RefObject<HTMLElement | null>,
-  depKey?: string
-) {
-  const [width, setWidth] = useState<number | null>(null);
-
-  useEffect(() => {
-    const group = ref.current;
-    if (!group) return;
-
-    let cancelled = false;
-
-    const measure = () => {
-      if (cancelled) return;
-      const items = group.children;
-      if (items.length === 0) return;
-
-      let minLeft = Number.POSITIVE_INFINITY;
-      let maxRight = Number.NEGATIVE_INFINITY;
-      for (let i = 0; i < items.length; i++) {
-        const rect = items[i].getBoundingClientRect();
-        if (rect.left < minLeft) minLeft = rect.left;
-        if (rect.right > maxRight) maxRight = rect.right;
-      }
-      const nextWidth = Math.ceil(maxRight - minLeft);
-      if (nextWidth > 0) {
-        setWidth((prev) => (prev === nextWidth ? prev : nextWidth));
-      }
-    };
-
-    measure();
-
-    const observer = new ResizeObserver(measure);
-    observer.observe(group);
-    for (let i = 0; i < group.children.length; i++) {
-      observer.observe(group.children[i]);
-    }
-
-    window.addEventListener("resize", measure);
-    document.fonts?.ready.then(measure);
-
-    return () => {
-      cancelled = true;
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [ref, depKey]);
-
-  return width;
-}
-
 // barra superior comun para las 30 paginas (alineada al pixel con el menu de proyectos)
 export function ProjectTopBar({ theme, onBack }: ProjectNavBarProps) {
-  const topGroupRef = useRef<HTMLDivElement>(null);
-  const lineWidth = useMeasuredSpanWidth(topGroupRef);
-
   return (
-    <header className="mb-12 flex justify-end">
-      <div className="w-fit max-w-full flex flex-col items-end">
-        <div ref={topGroupRef} className="flex items-center justify-end">
-          <button
-            type="button"
-            onClick={onBack}
-            style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
-            className="project-bar-link font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
-          >
-            &lt; Volver a proyectos
-          </button>
-        </div>
-
-        <div
-          aria-hidden="true"
-          className="h-px bg-black mt-5 w-full max-w-full"
-          style={lineWidth !== null ? { width: `${lineWidth}px` } : undefined}
-        />
+    <header className="mb-12 w-full">
+      <div className="flex items-center justify-end">
+        <button
+          type="button"
+          onClick={onBack}
+          style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
+          className="project-bar-link font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
+        >
+          &lt; Volver a proyectos
+        </button>
       </div>
+
+      <div aria-hidden="true" className="h-px bg-black mt-5 w-full" />
     </header>
   );
 }
 
 // pie de retorno comun para las 30 paginas (editable masivamente desde aqui)
 export function ProjectBackLink({ theme, onBack }: ProjectNavBarProps) {
-  const linkGroupRef = useRef<HTMLDivElement>(null);
-  const lineWidth = useMeasuredSpanWidth(linkGroupRef);
-
   return (
-    <footer className="mt-12 flex justify-end">
-      <div className="w-fit max-w-full flex flex-col items-end">
-        <div
-          aria-hidden="true"
-          className="h-px bg-black w-full max-w-full"
-          style={lineWidth !== null ? { width: `${lineWidth}px` } : undefined}
-        />
+    <footer className="mt-12 w-full">
+      <div aria-hidden="true" className="h-px bg-black w-full" />
 
-        <div ref={linkGroupRef} className="mt-5 flex items-center justify-end">
-          <button
-            type="button"
-            onClick={onBack}
-            style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
-            className="project-bar-link font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
-          >
-            &lt; Volver a proyectos
-          </button>
-        </div>
+      <div className="mt-5 flex items-center justify-end">
+        <button
+          type="button"
+          onClick={onBack}
+          style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
+          className="project-bar-link font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
+        >
+          &lt; Volver a proyectos
+        </button>
       </div>
     </footer>
   );
