@@ -140,6 +140,56 @@ body {
   }
 }
 
+/* enlace de retorno en cabecera y pie de proyecto alineado con separador adaptable */
+.project-bar-link {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-end;
+  min-block-size: 28px;
+  padding: 0;
+  border: 0;
+  color: #000000;
+  line-height: 1;
+  transition: color 180ms ease;
+}
+
+.project-bar-link--bottom {
+  align-items: flex-start;
+}
+
+.project-bar-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: transparent;
+  transition: background-color 180ms ease;
+}
+
+.project-bar-link:not(.project-bar-link--bottom)::after {
+  bottom: -6px;
+}
+
+.project-bar-link--bottom::after {
+  top: calc(1em + 4px);
+}
+
+.project-bar-link:hover::after {
+  background-color: var(--link-hover, #e60000);
+}
+
+.project-bar-link:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 4px;
+}
+
+@media (pointer: coarse) {
+  .project-bar-link {
+    min-block-size: 36px;
+  }
+}
+
 /* franja vertical rotada compartida con tarjetas de proyectos */
 .site-vertical-tag {
   display: inline-flex;

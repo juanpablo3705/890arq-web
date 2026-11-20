@@ -35,34 +35,102 @@ interface ProjectBarProps {
   onBack: () => void;
 }
 
+// mide la extension horizontal real de los hijos para ajustar el subrayado adaptable
+function useMeasuredSpanWidth(
+  ref: React.RefObject<HTMLElement | null>,
+  depKey?: string
+) {
+  const [width, setWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    const group = ref.current;
+    if (!group) return;
+
+    let cancelled = false;
+
+    const measure = () => {
+      if (cancelled) return;
+      const items = group.children;
+      if (items.length === 0) return;
+
+      let minLeft = Number.POSITIVE_INFINITY;
+      let maxRight = Number.NEGATIVE_INFINITY;
+      for (let i = 0; i < items.length; i++) {
+        const rect = items[i].getBoundingClientRect();
+        if (rect.left < minLeft) minLeft = rect.left;
+        if (rect.right > maxRight) maxRight = rect.right;
+      }
+      const nextWidth = Math.ceil(maxRight - minLeft);
+      if (nextWidth > 0) {
+        setWidth((prev) => (prev === nextWidth ? prev : nextWidth));
+      }
+    };
+
+    measure();
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(group);
+    for (let i = 0; i < group.children.length; i++) {
+      observer.observe(group.children[i]);
+    }
+
+    window.addEventListener("resize", measure);
+    document.fonts?.ready.then(measure);
+
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [ref, depKey]);
+
+  return width;
+}
+
 // barra superior comun para las 30 paginas (editable masivamente desde aqui)
 export function ProjectTopBar({ project, theme, onBack }: ProjectBarProps) {
-  return (
-    <div className="flex items-center justify-between gap-4 border-b border-black pb-5 mb-12">
-      <button
-        type="button"
-        onClick={onBack}
-        style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
-        className="site-inline-link site-inline-link--flush font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
-      >
-        &lt; Volver a proyectos
-      </button>
+  const topGroupRef = useRef<HTMLDivElement>(null);
+  const lineWidth = useMeasuredSpanWidth(topGroupRef, project.code);
 
-      <div
-        style={{
-          borderColor: theme.boxBorder,
-          color: theme.boxText,
-        }}
-        className="w-[56px] min-h-[48px] border bg-white flex flex-col items-center justify-center gap-[1px] text-center px-1.5 py-1.5 font-mono leading-[1.15] shrink-0"
-      >
-        <span className="text-[10px] tracking-[0.04em] font-normal uppercase">
-          PROY
-        </span>
-        <span className="text-[12px] font-semibold tabular-nums">
-          {project.code}
-        </span>
+  return (
+    <header className="mb-12 flex justify-end">
+      <div className="w-fit max-w-full flex flex-col items-end">
+        <div
+          ref={topGroupRef}
+          className="flex flex-wrap items-end justify-end gap-x-5 gap-y-2"
+        >
+          <button
+            type="button"
+            onClick={onBack}
+            style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
+            className="project-bar-link font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
+          >
+            <span className="translate-y-[2px]">&lt; Volver a proyectos</span>
+          </button>
+
+          <div
+            style={{
+              borderColor: theme.boxBorder,
+              color: theme.boxText,
+            }}
+            className="w-[56px] min-h-[48px] border bg-white flex flex-col items-center justify-center gap-[1px] text-center px-1.5 py-1.5 font-mono leading-[1.15] shrink-0"
+          >
+            <span className="text-[10px] tracking-[0.04em] font-normal uppercase">
+              PROY
+            </span>
+            <span className="text-[12px] font-semibold tabular-nums">
+              {project.code}
+            </span>
+          </div>
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="h-px bg-black mt-5 w-full max-w-full"
+          style={lineWidth !== null ? { width: `${lineWidth}px` } : undefined}
+        />
       </div>
-    </div>
+    </header>
   );
 }
 
@@ -74,17 +142,30 @@ export function ProjectBackLink({
   theme: CategoryTheme;
   onBack: () => void;
 }) {
+  const linkGroupRef = useRef<HTMLDivElement>(null);
+  const lineWidth = useMeasuredSpanWidth(linkGroupRef);
+
   return (
-    <div className="mt-16 pt-6 border-t border-black/15">
-      <button
-        type="button"
-        onClick={onBack}
-        style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
-        className="site-inline-link site-inline-link--flush font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
-      >
-        &lt; Volver a proyectos
-      </button>
-    </div>
+    <footer className="mt-12 flex justify-end">
+      <div className="w-fit max-w-full flex flex-col items-end">
+        <div
+          aria-hidden="true"
+          className="h-px bg-black w-full max-w-full"
+          style={lineWidth !== null ? { width: `${lineWidth}px` } : undefined}
+        />
+
+        <div ref={linkGroupRef} className="mt-5 flex items-start justify-end">
+          <button
+            type="button"
+            onClick={onBack}
+            style={{ "--link-hover": theme.hoverAccent } as React.CSSProperties}
+            className="project-bar-link project-bar-link--bottom font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
+          >
+            &lt; Volver a proyectos
+          </button>
+        </div>
+      </div>
+    </footer>
   );
 }
 
