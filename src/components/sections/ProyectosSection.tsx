@@ -19,10 +19,56 @@ export function ProyectosSection() {
   } = useCanvas();
 
   const sectionRef = useRef<HTMLElement>(null);
+  const filterGroupRef = useRef<HTMLDivElement>(null);
+  const [filterLineWidth, setFilterLineWidth] = useState<number | null>(null);
   const [isGridFadedOut, setIsGridFadedOut] = useState(false);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [filterAnnouncement, setFilterAnnouncement] = useState("");
   const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const isDetailView = activeProjectSlug !== null;
+
+  // mide la extension horizontal real del menu de categorias para ajustar su subrayado
+  useEffect(() => {
+    const group = filterGroupRef.current;
+    if (!group || isDetailView) return;
+
+    let cancelled = false;
+
+    const measureMenuSpan = () => {
+      if (cancelled) return;
+      const groupLeft = group.getBoundingClientRect().left;
+      let maxRight = groupLeft;
+      const items = group.children;
+      for (let i = 0; i < items.length; i++) {
+        const right = items[i].getBoundingClientRect().right;
+        if (right > maxRight) {
+          maxRight = right;
+        }
+      }
+      const nextWidth = Math.ceil(maxRight - groupLeft);
+      if (nextWidth > 0) {
+        setFilterLineWidth((prev) => (prev === nextWidth ? prev : nextWidth));
+      }
+    };
+
+    measureMenuSpan();
+
+    const observer = new ResizeObserver(measureMenuSpan);
+    observer.observe(group);
+    for (let i = 0; i < group.children.length; i++) {
+      observer.observe(group.children[i]);
+    }
+
+    window.addEventListener("resize", measureMenuSpan);
+    document.fonts?.ready.then(measureMenuSpan);
+
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      window.removeEventListener("resize", measureMenuSpan);
+    };
+  }, [isDetailView]);
 
   useEffect(() => {
     return () => {
@@ -110,8 +156,6 @@ export function ProyectosSection() {
       ? PROJECTS_DATA
       : PROJECTS_DATA.filter((project) => project.category === selectedCategory);
 
-  const isDetailView = activeProjectSlug !== null;
-
   return (
     <section
       ref={sectionRef}
@@ -125,39 +169,48 @@ export function ProyectosSection() {
               isGridFadedOut ? "opacity-0 pointer-events-none" : "opacity-100"
             }`}
           >
-            {/* barra superior con titulo y filtros por tipologia */}
-            <header className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 border-b border-black pb-5 mb-12">
-              <h2 className="font-mono text-lg md:text-xl font-bold tracking-tight text-black uppercase shrink-0">
-                Proyectos
-              </h2>
+            {/* barra superior de filtros por tipologia con subrayado adaptable al menu */}
+            <header className="mb-12">
+              <div className="w-fit max-w-full">
+                <div
+                  ref={filterGroupRef}
+                  role="group"
+                  aria-label="Filtrar proyectos por tipología"
+                  className="project-filter-group flex items-center gap-x-2.5 gap-y-2"
+                >
+                  {CATEGORIES.map((category) => {
+                    const isActive = selectedCategory === category;
+                    const theme = CATEGORY_THEMES[category];
+                    return (
+                      <button
+                        key={category}
+                        type="button"
+                        aria-pressed={isActive}
+                        onClick={() => handleSelectCategory(category)}
+                        style={
+                          {
+                            "--cat-bg": theme.highlightBg,
+                            "--cat-fg": theme.highlightText,
+                            "--cat-hover": theme.hoverAccent,
+                          } as React.CSSProperties
+                        }
+                        className="project-filter-btn font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
+                      >
+                        {category}
+                      </button>
+                    );
+                  })}
+                </div>
 
-              <div
-                role="group"
-                aria-label="Filtrar proyectos por tipología"
-                className="flex flex-wrap items-center gap-x-2.5 gap-y-2"
-              >
-                {CATEGORIES.map((category) => {
-                  const isActive = selectedCategory === category;
-                  const theme = CATEGORY_THEMES[category];
-                  return (
-                    <button
-                      key={category}
-                      type="button"
-                      aria-pressed={isActive}
-                      onClick={() => handleSelectCategory(category)}
-                      style={
-                        {
-                          "--cat-bg": theme.highlightBg,
-                          "--cat-fg": theme.highlightText,
-                          "--cat-hover": theme.hoverAccent,
-                        } as React.CSSProperties
-                      }
-                      className="project-filter-btn font-mono text-xs tracking-tight cursor-pointer whitespace-nowrap"
-                    >
-                      {category}
-                    </button>
-                  );
-                })}
+                <div
+                  aria-hidden="true"
+                  className="h-px bg-black mt-5 max-w-full"
+                  style={
+                    filterLineWidth !== null
+                      ? { width: `${filterLineWidth}px` }
+                      : undefined
+                  }
+                />
               </div>
             </header>
 
@@ -212,7 +265,7 @@ export function ProyectosSection() {
                         {/* fila inferior con titulo, ubicacion, superficie y caja de id */}
                         <div className="pt-2.5 flex items-start justify-between gap-3">
                           <div className="min-w-0 flex-1">
-                            <h3 className="project-card-title font-mono tracking-[-0.01em] text-black uppercase">
+                            <h2 className="project-card-title font-mono tracking-[-0.01em] text-black uppercase">
                               <button
                                 type="button"
                                 onClick={() => handleOpenProject(project.slug)}
@@ -225,7 +278,7 @@ export function ProyectosSection() {
                                   {project.name}
                                 </span>
                               </button>
-                            </h3>
+                            </h2>
 
                             <p className="project-card-meta mt-1 font-mono font-normal text-black">
                               {project.location}

@@ -118,23 +118,13 @@ export function ContactoSection() {
   return (
     <section aria-label="Contacto 890 ARQ" className="site-section">
       <div className="site-container">
-        {/* unica barra superior del encabezado */}
-        <header className="border-b border-black pb-5 mb-14">
-          <h2
-            id="contacto-heading"
-            className="font-mono text-lg md:text-xl font-bold tracking-tight text-black uppercase"
-          >
-            Contacto
-          </h2>
-        </header>
-
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* formulario principal alineado a la izquierda */}
           <form
             ref={formRef}
             onSubmit={handleSubmit}
             noValidate
-            aria-labelledby="contacto-heading"
+            aria-label="Formulario de contacto"
             className="lg:col-span-8 flex flex-col gap-6 font-mono text-black"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

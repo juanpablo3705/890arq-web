@@ -106,6 +106,12 @@ const TEAM_MEMBERS = [
   },
 ];
 
+// posicionamiento en grilla: 3 columnas arriba y los 2 ultimos pilares centrados debajo
+const PILLAR_GRID_PLACEMENT: Record<number, string> = {
+  3: "sm:col-span-2 lg:col-[2/span_2]",
+  4: "sm:col-[2/span_2] lg:col-[4/span_2]",
+};
+
 // seccion oficina minimalista y depurada
 export function OficinaSection() {
   const [flippedId, setFlippedId] = useState<string | null>(null);
@@ -117,13 +123,6 @@ export function OficinaSection() {
   return (
     <section aria-label="Oficina 890 ARQ" className="site-section">
       <div className="site-container">
-        {/* cabecera limpia coherente con proyectos */}
-        <header className="border-b border-black pb-5 mb-14">
-          <h2 className="font-mono text-lg md:text-xl font-bold tracking-tight text-black uppercase">
-            Oficina
-          </h2>
-        </header>
-
         <div className="flex flex-col gap-24 md:gap-28">
           {/* estudio: fotografia y resena institucional en composicion 7/5 */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -233,11 +232,14 @@ export function OficinaSection() {
             <ConceptNetwork />
           </div>
 
-          {/* servicios en grilla tipografica abierta sin cajas ni divisiones extra */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12">
-            {SERVICE_PILLARS.map((pillar) => (
-              <div key={pillar.emphasis + pillar.prefix}>
-                <h3 className="font-mono text-[13px] leading-[1.25] tracking-[-0.01em] text-black uppercase mb-4">
+          {/* servicios en grilla tipografica abierta con ultima fila centrada */}
+          <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-6 gap-x-12 gap-y-12">
+            {SERVICE_PILLARS.map((pillar, index) => (
+              <div
+                key={pillar.emphasis + pillar.prefix}
+                className={PILLAR_GRID_PLACEMENT[index] ?? "sm:col-span-2"}
+              >
+                <h2 className="font-mono text-[13px] leading-[1.25] tracking-[-0.01em] text-black uppercase mb-4">
                   {pillar.prefix ? (
                     <>
                       <span className="font-normal">{pillar.prefix} </span>
@@ -250,7 +252,7 @@ export function OficinaSection() {
                       {pillar.emphasis}
                     </span>
                   )}
-                </h3>
+                </h2>
 
                 <ul className="font-mono text-xs leading-[1.6] font-normal text-black space-y-1.5">
                   {pillar.items.map((item) => (
@@ -270,8 +272,8 @@ export function OficinaSection() {
           </div>
         </div>
 
-        {/* linea final de creditos al cierre de oficina */}
-        <footer className="mt-24 pt-6 border-t border-black text-center font-mono text-xs leading-normal font-normal text-[#737373]">
+        {/* linea final de creditos al cierre de oficina sin separador superior */}
+        <footer className="mt-24 md:mt-28 text-center font-mono text-xs leading-normal font-normal text-[#737373]">
           Diseño y Desarrollo Web:{" "}
           <a
             href="https://personal-web-gamma-six.vercel.app/"

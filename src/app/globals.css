@@ -522,6 +522,11 @@ body {
 }
 
 /* menu superior de filtros por tipologia en proyectos */
+.project-filter-group {
+  flex-wrap: wrap;
+  flex-wrap: balance;
+}
+
 .project-filter-btn {
   display: inline-flex;
   align-items: center;
