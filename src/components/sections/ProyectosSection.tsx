@@ -7,9 +7,9 @@ import { CATEGORIES, CATEGORY_THEMES, PROJECTS_DATA } from "@/data/projects";
 import { CategoryId } from "@/types/domain";
 import { useCanvas } from "@/components/canvas/CanvasContext";
 
-// tiempos sincronizados con --motion-fade-out (180ms) y --motion-fade-in (420ms) de globals.css
-const FADE_OUT_MS = 180;
-const STAGGER_STEP_MS = 28;
+// tiempos sincronizados con --motion-fade-out (240ms) y --motion-fade-in (520ms) de globals.css
+const FADE_OUT_MS = 240;
+const STAGGER_STEP_MS = 34;
 const MAX_STAGGER_ITEMS = 9;
 
 const ProjectDetailRenderer = dynamic(
@@ -70,7 +70,7 @@ export function ProyectosSection() {
     }
   };
 
-  // alterna la categoria con fade-out breve (180ms) y entrada escalonada limpia (420ms)
+  // alterna la categoria con fade-out breve (240ms) y entrada escalonada limpia (520ms)
   const handleSelectCategory = (category: CategoryId) => {
     const nextCategory = selectedCategory === category ? null : category;
     const visibleCount =
@@ -339,7 +339,7 @@ export function ProyectosSection() {
             </ul>
           </div>
         ) : (
-          /* vista de proyecto individual con misma coreografia de fade (180ms salida / 420ms entrada) */
+          /* vista de proyecto individual con fade puro (240ms salida / 520ms entrada) */
           <div
             data-visible={isDetailVisible ? "true" : "false"}
             className="site-view-fade"

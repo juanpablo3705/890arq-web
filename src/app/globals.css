@@ -8,8 +8,8 @@
   --site-max-w: 1120px;
   --site-pad-x: 1.5rem;
   --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-fade-out: 180ms;
-  --motion-fade-in: 420ms;
+  --motion-fade-out: 240ms;
+  --motion-fade-in: 520ms;
 }
 
 @media (min-width: 640px) {
@@ -725,17 +725,11 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   .site-view-fade {
-    transform: translate3d(0, 0, 0);
-    transition:
-      opacity var(--motion-fade-in) var(--motion-ease-out),
-      transform var(--motion-fade-in) var(--motion-ease-out);
+    transition: opacity var(--motion-fade-in) var(--motion-ease-out);
   }
 
   .site-view-fade[data-visible="false"] {
-    transform: translate3d(0, 6px, 0);
-    transition:
-      opacity var(--motion-fade-out) ease-in,
-      transform var(--motion-fade-out) ease-in;
+    transition: opacity var(--motion-fade-out) ease-in;
   }
 
   .projects-grid-stage {
