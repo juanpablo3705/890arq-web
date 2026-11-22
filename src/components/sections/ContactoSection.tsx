@@ -1,7 +1,12 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ContactFormPayload } from "@/types/domain";
+import {
+  CONTACT_FIELD_ORDER,
+  CONTACT_SUBJECTS,
+  isContactField,
+} from "@/lib/validators";
 import { sendContactAction } from "@/actions/send-contact";
 import { useCanvas } from "@/components/canvas/CanvasContext";
 import {
@@ -10,37 +15,23 @@ import {
   SocialChannelIcon,
 } from "@/components/canvas/socialChannels";
 
-const ASUNTO_OPTIONS = [
-  "Proyecto de Arquitectura / Diseño",
-  "Construcción / Ejecución de Obra",
-  "Tramitación Municipal",
-  "Otro",
-];
-
-const FIELD_ORDER: Array<keyof ContactFormPayload> = [
-  "nombre",
-  "correo",
-  "asunto",
-  "telefono",
-  "comuna",
-  "mensaje",
-];
-
 const INITIAL_FORM_STATE: ContactFormPayload = {
   nombre: "",
   correo: "",
-  asunto: ASUNTO_OPTIONS[0],
+  asunto: CONTACT_SUBJECTS[0],
   telefono: "",
   comuna: "",
   mensaje: "",
 };
 
-// vista de contacto con columna acoplada para los accesos directos y combobox de asunto
+// vista de contacto con columna acoplada para accesos directos y combobox de asunto
 export function ContactoSection() {
   const { socialDockPhase, registerSocialSlot } = useCanvas();
   const formRef = useRef<HTMLFormElement>(null);
+  const startedAtRef = useRef<number>(0);
   const [formData, setFormData] =
     useState<ContactFormPayload>(INITIAL_FORM_STATE);
+  const [honeypot, setHoneypot] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<
     Partial<Record<keyof ContactFormPayload, string>>
@@ -50,6 +41,10 @@ export function ContactoSection() {
     text: string;
   } | null>(null);
 
+  useEffect(() => {
+    startedAtRef.current = Date.now();
+  }, []);
+
   const isDocked = socialDockPhase === "docked";
 
   const handleChange = (
@@ -58,8 +53,9 @@ export function ContactoSection() {
     >
   ) => {
     const { name, value } = e.target;
+    if (!isContactField(name)) return;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (fieldErrors[name as keyof ContactFormPayload]) {
+    if (fieldErrors[name]) {
       setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
     }
     if (statusMessage) {
@@ -70,7 +66,7 @@ export function ContactoSection() {
   const focusFirstInvalidField = (
     errors: Partial<Record<keyof ContactFormPayload, string>>
   ) => {
-    const firstKey = FIELD_ORDER.find((key) => Boolean(errors[key]));
+    const firstKey = CONTACT_FIELD_ORDER.find((key) => Boolean(errors[key]));
     if (!firstKey) return;
     const el = formRef.current?.querySelector<HTMLElement>(
       `[name="${firstKey}"]`
@@ -85,7 +81,11 @@ export function ContactoSection() {
     setStatusMessage(null);
 
     try {
-      const result = await sendContactAction(formData);
+      const result = await sendContactAction({
+        ...formData,
+        website: honeypot,
+        startedAt: startedAtRef.current || undefined,
+      });
 
       if (!result.success) {
         if (result.fieldErrors) {
@@ -100,6 +100,8 @@ export function ContactoSection() {
         });
       } else {
         setFormData(INITIAL_FORM_STATE);
+        setHoneypot("");
+        startedAtRef.current = Date.now();
         setStatusMessage({
           type: "success",
           text: result.message,
@@ -125,8 +127,32 @@ export function ContactoSection() {
             onSubmit={handleSubmit}
             noValidate
             aria-label="Formulario de contacto"
-            className="lg:col-span-8 flex flex-col gap-6 font-mono text-black"
+            className="relative lg:col-span-8 flex flex-col gap-6 font-mono text-black"
           >
+            {/* campo trampa invisible para filtrar envios automatizados */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                width: 1,
+                height: 1,
+                overflow: "hidden",
+                clipPath: "inset(50%)",
+                opacity: 0,
+                pointerEvents: "none",
+              }}
+            >
+              <label htmlFor="contacto-website">Sitio web</label>
+              <input
+                id="contacto-website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex flex-col gap-1.5">
                 <label
@@ -143,6 +169,7 @@ export function ContactoSection() {
                   name="nombre"
                   type="text"
                   required
+                  maxLength={120}
                   autoComplete="name"
                   enterKeyHint="next"
                   disabled={isSending}
@@ -180,6 +207,7 @@ export function ContactoSection() {
                   name="correo"
                   type="email"
                   required
+                  maxLength={254}
                   autoComplete="email"
                   autoCorrect="off"
                   autoCapitalize="none"
@@ -230,7 +258,7 @@ export function ContactoSection() {
                   onChange={handleChange}
                   className="site-field site-select font-mono cursor-pointer"
                 >
-                  {ASUNTO_OPTIONS.map((option) => (
+                  {CONTACT_SUBJECTS.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -278,6 +306,7 @@ export function ContactoSection() {
                   type="tel"
                   inputMode="tel"
                   required
+                  maxLength={30}
                   autoComplete="tel"
                   enterKeyHint="next"
                   disabled={isSending}
@@ -315,6 +344,7 @@ export function ContactoSection() {
                   name="comuna"
                   type="text"
                   required
+                  maxLength={100}
                   autoComplete="address-level2"
                   enterKeyHint="next"
                   disabled={isSending}
@@ -352,6 +382,7 @@ export function ContactoSection() {
                 id="contacto-mensaje"
                 name="mensaje"
                 required
+                maxLength={3000}
                 disabled={isSending}
                 rows={5}
                 aria-invalid={fieldErrors.mensaje ? "true" : "false"}

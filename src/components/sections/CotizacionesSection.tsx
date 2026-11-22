@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 // vista cotizaciones en el brazo sur, area central en blanco

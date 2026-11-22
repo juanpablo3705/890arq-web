@@ -38,7 +38,7 @@ const LAYOUT_COMPONENTS: Record<
   "modular-triptych": ModularTriptychLayout,
 };
 
-// renderizador unificado con tope y pie comunes editables para los 30 proyectos
+// renderizador comun para las fichas de proyecto
 export function ProjectDetailRenderer({
   slug,
   onBack,

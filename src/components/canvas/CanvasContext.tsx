@@ -1,6 +1,14 @@
 "use client";
 
-import React, { createContext, useCallback, useContext, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { CategoryId, SectionId } from "@/types/domain";
 import { SocialChannelId } from "./socialChannels";
 
@@ -34,9 +42,14 @@ const CanvasContext = createContext<CanvasContextValue | undefined>(undefined);
 
 export function CanvasProvider({ children }: { children: React.ReactNode }) {
   const [activeSection, setActiveSectionState] = useState<SectionId>("home");
-  const [activeProjectSlug, setActiveProjectSlug] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(null);
-  const [socialDockPhase, setSocialDockPhase] = useState<SocialDockPhase>("corner");
+  const [activeProjectSlug, setActiveProjectSlug] = useState<string | null>(
+    null
+  );
+  const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(
+    null
+  );
+  const [socialDockPhase, setSocialDockPhase] =
+    useState<SocialDockPhase>("corner");
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const contactoPaneRef = useRef<HTMLDivElement | null>(null);
   const socialSlotRefs = useRef<Record<SocialChannelId, HTMLElement | null>>({
@@ -52,12 +65,14 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  useEffect(() => clearPendingReset, [clearPendingReset]);
+
   const navigateTo = useCallback(
     (section: SectionId) => {
       clearPendingReset();
       setActiveSectionState(section);
 
-      // si vuelve al home limpiamos el estado de proyectos al terminar el desplazamiento
+      // limpia estado de proyectos al terminar el desplazamiento de regreso al home
       if (section === "home") {
         resetTimerRef.current = setTimeout(() => {
           setActiveProjectSlug(null);
@@ -99,27 +114,43 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
+  const contextValue = useMemo<CanvasContextValue>(
+    () => ({
+      activeSection,
+      activeProjectSlug,
+      selectedCategory,
+      socialDockPhase,
+      setActiveSection: navigateTo,
+      navigateTo,
+      goHome,
+      setActiveProjectSlug,
+      openProject,
+      closeProject,
+      setSelectedCategory,
+      setSocialDockPhase,
+      registerContactoPane,
+      getContactoPane,
+      registerSocialSlot,
+      getSocialSlot,
+    }),
+    [
+      activeSection,
+      activeProjectSlug,
+      selectedCategory,
+      socialDockPhase,
+      navigateTo,
+      goHome,
+      openProject,
+      closeProject,
+      registerContactoPane,
+      getContactoPane,
+      registerSocialSlot,
+      getSocialSlot,
+    ]
+  );
+
   return (
-    <CanvasContext.Provider
-      value={{
-        activeSection,
-        activeProjectSlug,
-        selectedCategory,
-        socialDockPhase,
-        setActiveSection: navigateTo,
-        navigateTo,
-        goHome,
-        setActiveProjectSlug,
-        openProject,
-        closeProject,
-        setSelectedCategory,
-        setSocialDockPhase,
-        registerContactoPane,
-        getContactoPane,
-        registerSocialSlot,
-        getSocialSlot,
-      }}
-    >
+    <CanvasContext.Provider value={contextValue}>
       {children}
     </CanvasContext.Provider>
   );

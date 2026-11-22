@@ -1,23 +1,20 @@
 # dependencias y compilacion
-/node_modules
+node_modules/
 /.pnp
 .pnp.*
-/.next
-/.next/
+.next/
 /out/
 /build
 /coverage
 
 # variables de entorno y secretos locales
 .env*
-/credenciales
-/supabase-schema.sql
+credenciales
+supabase-schema.sql
 
 # carpetas de trabajo local
-/referencias-visuales
-/referencias-visuales/
-/activos-originales
-/activos-originales/
+referencias-visuales/
+activos-originales/
 *.pdf
 *.PDF
 

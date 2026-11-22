@@ -1,4 +1,4 @@
-import { getStorageUrl } from "@/lib/supabase";
+import { getStorageUrl } from "@/lib/storage";
 import {
   CategoryId,
   CategoryTheme,
@@ -72,7 +72,7 @@ function media(
   };
 }
 
-// catalogo oficial de 30 proyectos articulado desde texto final proyectos.pdf
+// catalogo oficial de 30 proyectos
 export const PROJECTS_DATA: ProjectItem[] = [
   {
     id: "proyecto-01",

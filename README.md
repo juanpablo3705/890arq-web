@@ -28,7 +28,7 @@ Para superar las limitaciones de rendimiento, seguridad y mantenibilidad de dich
 * **Framework Web:** Next.js (App Router, Server Components & Server Actions)
 * **Librería de Interfaz:** React 19
 * **Lenguaje:** TypeScript (modo estricto)
-* **Estilos y Maquetación:** Tailwind CSS v4 + Lucide React
+* **Estilos y Maquetación:** Tailwind CSS v4
 * **Base de Datos y Almacenamiento Multimedia:** Supabase (PostgreSQL + Supabase Storage)
 * **Validación de Esquemas:** Zod
 * **Servicio de Correo Transaccional:** Resend

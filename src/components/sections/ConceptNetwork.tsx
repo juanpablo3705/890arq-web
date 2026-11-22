@@ -13,7 +13,7 @@ export interface ConceptNode {
   tier: ConceptTier;
   // espacio reservado para futuros enlaces por palabra
   href?: string;
-  // parametros individuales para flotacion lenta (+50% rango, -45% velocidad)
+  // parametros individuales de flotacion
   ampX: number;
   ampY: number;
   freqX: number;
@@ -381,6 +381,13 @@ export function ConceptNetwork() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const nodeRefs = useRef<Array<HTMLElement | null>>([]);
   const isVisibleRef = useRef(false);
+  const activeSectionRef = useRef(activeSection);
+  const syncLoopRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    activeSectionRef.current = activeSection;
+    syncLoopRef.current?.();
+  }, [activeSection]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -448,16 +455,18 @@ export function ConceptNetwork() {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
+      container.dataset.animating = "false";
     };
 
     const tick = (now: number) => {
       if (
-        activeSection !== "oficina" ||
+        activeSectionRef.current !== "oficina" ||
         !isVisibleRef.current ||
         motionQuery.matches ||
         document.hidden
       ) {
         rafId = null;
+        container.dataset.animating = "false";
         return;
       }
 
@@ -488,16 +497,19 @@ export function ConceptNetwork() {
       }
 
       const shouldRun =
-        activeSection === "oficina" &&
+        activeSectionRef.current === "oficina" &&
         isVisibleRef.current &&
         !document.hidden;
 
       if (shouldRun && rafId === null) {
+        container.dataset.animating = "true";
         rafId = requestAnimationFrame(tick);
       } else if (!shouldRun) {
         stopLoop();
       }
     };
+
+    syncLoopRef.current = syncLoop;
 
     const resizeObserver = new ResizeObserver(measureCanvas);
     resizeObserver.observe(container);
@@ -518,13 +530,14 @@ export function ConceptNetwork() {
     syncLoop();
 
     return () => {
+      syncLoopRef.current = null;
       stopLoop();
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       motionQuery.removeEventListener("change", syncLoop);
       document.removeEventListener("visibilitychange", syncLoop);
     };
-  }, [activeSection]);
+  }, []);
 
   return (
     <figure

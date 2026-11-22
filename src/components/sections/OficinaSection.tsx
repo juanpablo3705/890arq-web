@@ -1,7 +1,7 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
+import Image from "next/image";
 import { ConceptNetwork } from "./ConceptNetwork";
+import { TeamCardsGrid, TeamMember } from "./TeamCardsGrid";
 
 interface ServicePillar {
   prefix: string;
@@ -9,7 +9,7 @@ interface ServicePillar {
   items: string[];
 }
 
-// 5 pilares de servicios del estudio
+// pilares de servicios del estudio
 const SERVICE_PILLARS: ServicePillar[] = [
   {
     prefix: "DISEÑO Y",
@@ -70,8 +70,8 @@ const SERVICE_PILLARS: ServicePillar[] = [
   },
 ];
 
-// integrantes del equipo para tarjetas giratorias 3d
-const TEAM_MEMBERS = [
+// integrantes del equipo
+const TEAM_MEMBERS: TeamMember[] = [
   {
     id: "vito",
     src: "/images/img890-vito-1.png",
@@ -106,25 +106,22 @@ const TEAM_MEMBERS = [
   },
 ];
 
-// seccion oficina minimalista y depurada
+// seccion de oficina y servicios
 export function OficinaSection() {
-  const [flippedId, setFlippedId] = useState<string | null>(null);
-
-  const toggleCard = (id: string) => {
-    setFlippedId((prev) => (prev === id ? null : id));
-  };
-
   return (
     <section aria-label="Oficina 890 ARQ" className="site-section">
       <div className="site-container">
         <div className="flex flex-col gap-24 md:gap-28">
-          {/* estudio: fotografia y resena institucional en composicion 7/5 */}
+          {/* estudio y resena institucional */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 border border-black overflow-hidden bg-neutral-100">
-              <img
+              <Image
                 src="/images/OFI.D-1024x683.jpeg"
                 alt="Oficina de arquitectura 890 ARQ"
-                decoding="async"
+                width={1024}
+                height={683}
+                loading="lazy"
+                sizes="(min-width: 1024px) 620px, 100vw"
                 className="block w-full h-auto aspect-[3/2] object-cover grayscale"
               />
             </div>
@@ -155,52 +152,10 @@ export function OficinaSection() {
             </div>
           </div>
 
-          {/* equipo: 4 tarjetas cuadradas interactivas sin elementos redundantes */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
-            {TEAM_MEMBERS.map((member) => {
-              const isFlipped = flippedId === member.id;
-              return (
-                <button
-                  key={member.id}
-                  type="button"
-                  aria-pressed={isFlipped}
-                  aria-label={`${member.name}, ${member.role}`}
-                  data-flipped={isFlipped ? "true" : "false"}
-                  onClick={() => toggleCard(member.id)}
-                  className="flip-card block w-full aspect-square border border-black bg-transparent p-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-4"
-                >
-                  <span className="flip-card-inner block">
-                    <span className="flip-card-front block overflow-hidden">
-                      <img
-                        src={member.src}
-                        alt={member.alt}
-                        decoding="async"
-                        className="block w-full h-full object-cover grayscale"
-                      />
-                    </span>
-                    <span className="flip-card-back font-mono">
-                      <span className="block text-[0.95rem] sm:text-[1.05rem] leading-[1.2] font-medium mb-2.5">
-                        {member.name}
-                      </span>
-                      {member.credentials.map((cred) => (
-                        <span
-                          key={cred}
-                          className="block text-[0.7rem] sm:text-[0.75rem] leading-[1.45] font-normal mb-2"
-                        >
-                          {cred}
-                        </span>
-                      ))}
-                      <span className="block text-[0.8rem] sm:text-[0.9rem] leading-[1.25] font-medium mt-1">
-                        {member.role}
-                      </span>
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          {/* equipo */}
+          <TeamCardsGrid members={TEAM_MEMBERS} />
 
-          {/* vision en dos columnas limpias */}
+          {/* vision */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 font-mono text-xs leading-[1.7] font-normal text-black">
             <p>
               En términos de diseño arquitectónico y construcción,{" "}
@@ -221,12 +176,12 @@ export function OficinaSection() {
             </p>
           </div>
 
-          {/* mapa conceptual animado sobre blanco puro */}
+          {/* mapa conceptual */}
           <div>
             <ConceptNetwork />
           </div>
 
-          {/* servicios en indice editorial de 5 filas horizontales (4/8) */}
+          {/* servicios */}
           <div className="divide-y divide-black/15">
             {SERVICE_PILLARS.map((pillar) => (
               <div
@@ -264,7 +219,7 @@ export function OficinaSection() {
           </div>
         </div>
 
-        {/* linea final de creditos al cierre de oficina sin separador superior */}
+        {/* creditos */}
         <footer className="mt-24 md:mt-28 text-center font-mono text-xs leading-normal font-normal text-[#737373]">
           Diseño y Desarrollo Web:{" "}
           <a

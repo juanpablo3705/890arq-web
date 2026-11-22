@@ -151,22 +151,33 @@ export function UIFrame() {
         const pane = getContactoPane();
         const paneRect = pane?.getBoundingClientRect();
 
-        // si estaban acoplados en contacto los posicionamos primero en su coordenada exacta
+        // si estaban acoplados en contacto leemos coordenadas primero y escribimos despues
         if (phaseRef.current === "docked" && paneRect) {
+          const startDeltas: Partial<
+            Record<SocialChannelId, { dx: number; dy: number }>
+          > = {};
+
           for (const id of CONTACTO_CHANNEL_ORDER) {
             const slotEl = getSocialSlot(id);
             const cornerEl = cornerSlotRefs.current[id];
-            const floatEl = floatingLinkRefs.current[id];
-            if (!slotEl || !cornerEl || !floatEl) continue;
+            if (!slotEl || !cornerEl) continue;
 
             const slotRect = slotEl.getBoundingClientRect();
             const cornerRect = cornerEl.getBoundingClientRect();
-            const startDx = slotRect.left - paneRect.left - cornerRect.left;
-            const startDy = slotRect.top - paneRect.top - cornerRect.top;
+            startDeltas[id] = {
+              dx: slotRect.left - paneRect.left - cornerRect.left,
+              dy: slotRect.top - paneRect.top - cornerRect.top,
+            };
+          }
+
+          for (const id of CONTACTO_CHANNEL_ORDER) {
+            const floatEl = floatingLinkRefs.current[id];
+            const delta = startDeltas[id];
+            if (!floatEl || !delta) continue;
 
             floatEl.style.transition = "none";
             floatEl.style.willChange = "transform";
-            floatEl.style.transform = `translate3d(${startDx}px, ${startDy}px, 0)`;
+            floatEl.style.transform = `translate3d(${delta.dx}px, ${delta.dy}px, 0)`;
           }
         }
 

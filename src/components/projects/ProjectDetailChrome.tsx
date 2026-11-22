@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { CATEGORY_THEMES, PROJECTS_DATA } from "@/data/projects";
 import {
   CategoryTheme,
@@ -8,7 +10,11 @@ import {
   ProjectMediaItem,
   ProjectSpec,
 } from "@/types/domain";
-import { LightboxLoupe } from "./LightboxLoupe";
+
+const LightboxLoupe = dynamic(
+  () => import("./LightboxLoupe").then((mod) => mod.LightboxLoupe),
+  { ssr: false }
+);
 
 export interface ResolvedProjectMeta {
   project: ProjectItem;
@@ -21,7 +27,7 @@ export interface ProjectLayoutProps {
   onZoom: (item: ProjectMediaItem) => void;
 }
 
-// obtiene metadatos y tema cromatico desde el catalogo central
+// obtiene metadatos y tema cromatico desde el catalogo
 export function getProjectMeta(slug: string): ResolvedProjectMeta {
   const project =
     PROJECTS_DATA.find((item) => item.slug === slug) ?? PROJECTS_DATA[0];
@@ -34,7 +40,7 @@ interface ProjectNavBarProps {
   onBack: () => void;
 }
 
-// barra superior comun para las 30 paginas (alineada al pixel con el menu de proyectos)
+// barra superior de retorno en fichas de proyecto
 export function ProjectTopBar({ theme, onBack }: ProjectNavBarProps) {
   return (
     <header className="mb-12 w-full">
@@ -54,7 +60,7 @@ export function ProjectTopBar({ theme, onBack }: ProjectNavBarProps) {
   );
 }
 
-// pie de retorno comun para las 30 paginas (editable masivamente desde aqui)
+// pie de retorno comun de fichas de proyecto
 export function ProjectBackLink({ theme, onBack }: ProjectNavBarProps) {
   return (
     <footer className="mt-12 w-full">
@@ -74,7 +80,7 @@ export function ProjectBackLink({ theme, onBack }: ProjectNavBarProps) {
   );
 }
 
-// envoltorio maestro con tope comun, pie comun y visor modal nativo de laminas
+// envoltorio comun con cabecera, pie y visor modal de laminas
 export function ProjectPageShell({
   project,
   theme,
@@ -117,7 +123,7 @@ export function ProjectPageShell({
 
       <ProjectBackLink theme={theme} onBack={onBack} />
 
-      {/* visor modal nativo para inspeccionar planos y fotografias a mayor escala */}
+      {/* visor modal nativo para inspeccionar planos y fotografias */}
       <dialog
         ref={dialogRef}
         aria-label={zoomed?.alt || "Vista ampliada"}
@@ -165,7 +171,7 @@ export function ProjectPageShell({
   );
 }
 
-// unica franja vertical de tipologia por proyecto
+// franja vertical de tipologia
 export function ProjectVerticalTag({
   label,
   theme,
@@ -186,7 +192,7 @@ export function ProjectVerticalTag({
   );
 }
 
-// caja numerica de proyecto con misma geometria que las tarjetas del catalogo
+// caja numerica de proyecto
 export function ProjectCodeBadge({
   code,
   theme,
@@ -210,7 +216,7 @@ export function ProjectCodeBadge({
   );
 }
 
-// titulo dual regular + bold italic acompañado a la izquierda por la caja PROY / XX
+// titulo de proyecto con prefijo regular, nombre en negrita cursiva y codigo lateral
 export function ProjectTitle({
   project,
   className = "text-xl md:text-2xl",
@@ -239,7 +245,7 @@ export function ProjectTitle({
   );
 }
 
-// ficha tecnica abierta sin recuadros ni lineas extra
+// ficha tecnica abierta
 export function ProjectSpecsList({ specs }: { specs: ProjectSpec[] }) {
   return (
     <dl className="space-y-2 text-xs">
@@ -285,13 +291,14 @@ export function ProjectFigure({
         isDrawing ? "bg-white p-3 md:p-6" : "bg-neutral-100"
       }`}
     >
-      <img
+      <Image
         src={item.url}
         alt={item.alt}
         width={item.width}
         height={item.height}
         loading={priority ? "eager" : "lazy"}
-        decoding="async"
+        fetchPriority={priority ? "high" : undefined}
+        sizes="(min-width: 1120px) 1120px, 100vw"
         className={`block w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015] ${
           aspectClass
             ? `${aspectClass} ${cover ? "object-cover" : "object-contain"}`

@@ -74,3 +74,8 @@ export interface ContactFormPayload {
   comuna: string;
   mensaje: string;
 }
+
+export interface ContactSubmissionPayload extends ContactFormPayload {
+  website?: string;
+  startedAt?: number;
+}

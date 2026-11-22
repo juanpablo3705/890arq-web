@@ -2,10 +2,19 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { CATEGORIES, CATEGORY_THEMES, PROJECTS_DATA } from "@/data/projects";
 import { CategoryId } from "@/types/domain";
 import { useCanvas } from "@/components/canvas/CanvasContext";
-import { ProjectDetailRenderer } from "@/components/projects/ProjectDetailRenderer";
+
+const ProjectDetailRenderer = dynamic(
+  () =>
+    import("@/components/projects/ProjectDetailRenderer").then(
+      (mod) => mod.ProjectDetailRenderer
+    ),
+  { ssr: false }
+);
 
 // seccion de proyectos con filtro por tipologia y transicion a detalle
 export function ProyectosSection() {
@@ -199,13 +208,17 @@ export function ProyectosSection() {
                       {/* columna principal: portada cuadrada uniforme y ficha inferior */}
                       <div className="flex-1 min-w-0 flex flex-col">
                         <div className="w-full aspect-square border border-black overflow-hidden bg-neutral-100">
-                          <img
+                          <Image
                             src={project.thumbnail}
                             alt={`${project.title} — ${project.category}, ${project.cardLocation}`}
                             width={900}
                             height={900}
-                            loading={idx < 6 ? "eager" : "lazy"}
-                            decoding="async"
+                            loading={
+                              activeSection === "proyectos" && idx < 6
+                                ? "eager"
+                                : "lazy"
+                            }
+                            sizes="(min-width: 1024px) 320px, (min-width: 768px) 44vw, 90vw"
                             className="project-card-img block w-full h-full object-cover"
                           />
                         </div>

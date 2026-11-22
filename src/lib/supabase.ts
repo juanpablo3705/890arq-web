@@ -1,27 +1,21 @@
 import { createClient } from "@supabase/supabase-js";
 
-// lectura de variables publicas con respaldo seguro para compilacion
+// cliente solo de servidor para respaldar mensajes sin persistencia de sesion
 const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-anon-key";
+  process.env.SUPABASE_URL ||
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  "https://placeholder.supabase.co";
 
-// cliente base de supabase sin persistencia de sesion para compatibilidad edge
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+const supabaseServerKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  "placeholder-anon-key";
+
+export const supabase = createClient(supabaseUrl, supabaseServerKey, {
   auth: {
     persistSession: false,
+    autoRefreshToken: false,
+    detectSessionInUrl: false,
   },
 });
-
-// helper para obtener url publica desde el bucket proyectos-media
-export function getStorageUrl(path: string): string {
-  if (!path) return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
-  }
-  const cleanPath = path.replace(/^\/+/, "");
-  const { data } = supabase.storage
-    .from("proyectos-media")
-    .getPublicUrl(cleanPath);
-  return data.publicUrl;
-}

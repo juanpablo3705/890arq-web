@@ -479,9 +479,12 @@ body {
   align-items: center;
   white-space: nowrap;
   cursor: pointer;
-  will-change: transform;
   backface-visibility: hidden;
   transform: perspective(800px) translate3d(0, 0, 0.01px);
+}
+
+.concept-canvas-wrap[data-animating="true"] .concept-node {
+  will-change: transform;
 }
 
 .concept-dot {
