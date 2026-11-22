@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useCanvas } from "./CanvasContext";
+import { CANVAS_TRANSITION_MS, useCanvas } from "./CanvasContext";
 import {
   CONTACTO_CHANNEL_ORDER,
   SOCIAL_CHANNELS,
@@ -9,20 +9,20 @@ import {
   SocialChannelId,
 } from "./socialChannels";
 
-const FLIGHT_TO_CONTACTO_MS = 700;
-const FLIGHT_TO_CORNER_MS = 680;
+const FLIGHT_TO_CONTACTO_MS = CANVAS_TRANSITION_MS;
+const FLIGHT_TO_CORNER_MS = CANVAS_TRANSITION_MS - 30;
 const FLIGHT_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 const ENTER_DELAYS: Record<SocialChannelId, number> = {
-  mail: 20,
-  whatsapp: 70,
-  instagram: 120,
+  mail: 30,
+  whatsapp: 95,
+  instagram: 160,
 };
 
 const EXIT_DELAYS: Record<SocialChannelId, number> = {
   instagram: 0,
-  whatsapp: 45,
-  mail: 90,
+  whatsapp: 60,
+  mail: 120,
 };
 
 // marco fijo con logo superior y botones sociales coreografiados hacia contacto

@@ -12,6 +12,9 @@ import React, {
 import { CategoryId, SectionId } from "@/types/domain";
 import { SocialChannelId } from "./socialChannels";
 
+// duracion maestra del desplazamiento del lienzo en cruz (sincronizada en todo el sitio)
+export const CANVAS_TRANSITION_MS = 1050;
+
 export type SocialDockPhase =
   | "corner"
   | "flying-to-contacto"
@@ -78,7 +81,7 @@ export function CanvasProvider({ children }: { children: React.ReactNode }) {
           setActiveProjectSlug(null);
           setSelectedCategory(null);
           resetTimerRef.current = null;
-        }, 700);
+        }, CANVAS_TRANSITION_MS);
       }
     },
     [clearPendingReset]

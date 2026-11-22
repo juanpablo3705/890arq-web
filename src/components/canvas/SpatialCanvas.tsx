@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { SectionId } from "@/types/domain";
-import { useCanvas } from "./CanvasContext";
+import { CANVAS_TRANSITION_MS, useCanvas } from "./CanvasContext";
 
 interface SpatialCanvasProps {
   home: React.ReactNode;
@@ -53,7 +53,7 @@ export function SpatialCanvas({
         westRef.current?.scrollTo({ top: 0 });
         eastRef.current?.scrollTo({ top: 0 });
         southRef.current?.scrollTo({ top: 0 });
-      }, 700);
+      }, CANVAS_TRANSITION_MS);
       return () => {
         cancelAnimationFrame(raf);
         clearTimeout(timer);
@@ -62,7 +62,7 @@ export function SpatialCanvas({
 
     const timer = setTimeout(() => {
       setSettledSection(activeSection);
-    }, 700);
+    }, CANVAS_TRANSITION_MS);
     return () => clearTimeout(timer);
   }, [activeSection]);
 
@@ -72,7 +72,7 @@ export function SpatialCanvas({
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-white">
       <div
-        className={`relative w-screen h-screen transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${SECTION_TRANSFORMS[activeSection]}`}
+        className={`relative w-screen h-screen transition-transform duration-[1050ms] motion-reduce:duration-0 ease-[cubic-bezier(0.22,1,0.36,1)] ${SECTION_TRANSFORMS[activeSection]}`}
       >
         {/* centro (0, 0): home */}
         <div

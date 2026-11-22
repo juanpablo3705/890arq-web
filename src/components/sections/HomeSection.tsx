@@ -2,7 +2,10 @@
 
 import React, { useEffect, useRef } from "react";
 import { SectionId } from "@/types/domain";
-import { useCanvas } from "@/components/canvas/CanvasContext";
+import {
+  CANVAS_TRANSITION_MS,
+  useCanvas,
+} from "@/components/canvas/CanvasContext";
 
 interface CrossButtonProps {
   label: string;
@@ -44,7 +47,7 @@ export function HomeSection() {
     }
     const timer = setTimeout(() => {
       node.classList.add("logo-wave-paused");
-    }, 700);
+    }, CANVAS_TRANSITION_MS);
     return () => clearTimeout(timer);
   }, [activeSection]);
 
