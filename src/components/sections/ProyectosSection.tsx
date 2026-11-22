@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { flushSync } from "react-dom";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { CATEGORIES, CATEGORY_THEMES, PROJECTS_DATA } from "@/data/projects";
 import { CategoryId } from "@/types/domain";
 import { useCanvas } from "@/components/canvas/CanvasContext";
+
+// tiempos sincronizados con --motion-fade-out (180ms) y --motion-fade-in (420ms) de globals.css
+const FADE_OUT_MS = 180;
+const STAGGER_STEP_MS = 28;
+const MAX_STAGGER_ITEMS = 9;
 
 const ProjectDetailRenderer = dynamic(
   () =>
@@ -16,7 +20,14 @@ const ProjectDetailRenderer = dynamic(
   { ssr: false }
 );
 
-// seccion de proyectos con filtro por tipologia y transicion a detalle
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+// seccion de proyectos con filtro secuencial escalonado y transicion a detalle
 export function ProyectosSection() {
   const {
     activeSection,
@@ -28,73 +39,29 @@ export function ProyectosSection() {
   } = useCanvas();
 
   const sectionRef = useRef<HTMLElement>(null);
-  const gridRef = useRef<HTMLUListElement>(null);
-  const transitionTokenRef = useRef(0);
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const filterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [isGridFadedOut, setIsGridFadedOut] = useState(false);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [filterAnnouncement, setFilterAnnouncement] = useState("");
-  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pendingFilterFrom, setPendingFilterFrom] = useState<
+    CategoryId | null | undefined
+  >(undefined);
+  const [revealKey, setRevealKey] = useState(0);
 
   const isDetailView = activeProjectSlug !== null;
-
-  // limpia los nombres y clases temporales de view transition al finalizar
-  const clearTransitionStyles = useCallback(() => {
-    const list = gridRef.current;
-    if (!list) return;
-    for (const child of Array.from(list.children)) {
-      const el = child as HTMLElement;
-      el.style.viewTransitionName = "";
-      el.removeAttribute("data-vt-motion");
-    }
-  }, []);
-
-  // asigna view-transition-name solo a tarjetas visibles en el viewport para evitar recortes offscreen
-  const tagVisibleCards = useCallback(
-    (
-      motion: "fly-up" | "fly-down" | null,
-      onlyMotionIds: Set<string> | null = null
-    ) => {
-      const list = gridRef.current;
-      if (!list) return new Set<string>();
-      const scrollParent = sectionRef.current?.parentElement;
-      const paneRect = scrollParent
-        ? scrollParent.getBoundingClientRect()
-        : { top: 0, bottom: window.innerHeight };
-
-      const visibleIds = new Set<string>();
-      for (const child of Array.from(list.children)) {
-        const el = child as HTMLElement;
-        const id = el.dataset.projectId;
-        if (!id) continue;
-        const rect = el.getBoundingClientRect();
-        const isInView =
-          rect.bottom > paneRect.top && rect.top < paneRect.bottom;
-        if (isInView) {
-          visibleIds.add(id);
-          el.style.viewTransitionName = `project-card-${id}`;
-          if (motion && (!onlyMotionIds || onlyMotionIds.has(id))) {
-            el.setAttribute("data-vt-motion", motion);
-          } else {
-            el.removeAttribute("data-vt-motion");
-          }
-        } else {
-          el.style.viewTransitionName = "none";
-          el.removeAttribute("data-vt-motion");
-        }
-      }
-      return visibleIds;
-    },
-    []
-  );
+  const isFilterExiting = pendingFilterFrom !== undefined;
+  const displayedCategory = isFilterExiting
+    ? pendingFilterFrom
+    : selectedCategory;
 
   useEffect(() => {
     return () => {
-      if (fadeTimerRef.current) {
-        clearTimeout(fadeTimerRef.current);
-      }
-      clearTransitionStyles();
+      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+      if (filterTimerRef.current) clearTimeout(filterTimerRef.current);
     };
-  }, [clearTransitionStyles]);
+  }, []);
 
   const scrollParentToTop = () => {
     const scrollParent = sectionRef.current?.parentElement;
@@ -103,10 +70,9 @@ export function ProyectosSection() {
     }
   };
 
-  // alterna la categoria activa con animacion simetrica de entrada y salida via view transitions
+  // alterna la categoria con fade-out breve (180ms) y entrada escalonada limpia (420ms)
   const handleSelectCategory = (category: CategoryId) => {
     const nextCategory = selectedCategory === category ? null : category;
-    const mode = nextCategory === null ? "unfilter" : "filter";
     const visibleCount =
       nextCategory === null
         ? PROJECTS_DATA.length
@@ -119,69 +85,77 @@ export function ProyectosSection() {
             visibleCount === 1 ? "proyecto" : "proyectos"
           }`;
 
-    const applyUpdate = () => {
-      setSelectedCategory(nextCategory);
-      setFilterAnnouncement(announcement);
-    };
+    setSelectedCategory(nextCategory);
+    setFilterAnnouncement(announcement);
 
-    const reducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const doc = document as Document & {
-      startViewTransition?: (callback: () => void) => {
-        finished: Promise<void>;
-      };
-    };
-
-    if (typeof doc.startViewTransition === "function" && !reducedMotion) {
-      const token = ++transitionTokenRef.current;
-      clearTransitionStyles();
-
-      // captura solo tarjetas visibles antes del cambio (al desmarcar, bajan por delante)
-      const prevVisibleIds = tagVisibleCards(
-        mode === "unfilter" ? "fly-down" : null
-      );
-
-      const transition = doc.startViewTransition(() => {
-        flushSync(applyUpdate);
-        // etiqueta las tarjetas visibles resultantes (al filtrar, suben por delante)
-        if (mode === "filter") {
-          tagVisibleCards("fly-up");
-        } else {
-          tagVisibleCards("fly-down", prevVisibleIds);
-        }
-      });
-
-      transition.finished
-        .catch(() => {})
-        .finally(() => {
-          if (transitionTokenRef.current === token) {
-            clearTransitionStyles();
-          }
-        });
-    } else {
-      applyUpdate();
+    if (filterTimerRef.current) {
+      clearTimeout(filterTimerRef.current);
+      filterTimerRef.current = null;
     }
+
+    if (prefersReducedMotion()) {
+      setPendingFilterFrom(undefined);
+      return;
+    }
+
+    // si el usuario cancela en medio de la salida volviendo a lo ya mostrado, restaura suavemente
+    if (nextCategory === displayedCategory) {
+      setPendingFilterFrom(undefined);
+      return;
+    }
+
+    setPendingFilterFrom(displayedCategory);
+    filterTimerRef.current = setTimeout(() => {
+      setPendingFilterFrom(undefined);
+      setRevealKey((prev) => prev + 1);
+      filterTimerRef.current = null;
+    }, FADE_OUT_MS);
   };
 
   const handleOpenProject = (slug: string) => {
     if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    if (filterTimerRef.current) {
+      clearTimeout(filterTimerRef.current);
+      filterTimerRef.current = null;
+    }
+    setPendingFilterFrom(undefined);
+
+    if (prefersReducedMotion()) {
+      setRevealKey(0);
+      openProject(slug);
+      setIsGridFadedOut(false);
+      setIsDetailVisible(true);
+      scrollParentToTop();
+      return;
+    }
+
     setIsGridFadedOut(true);
     setIsDetailVisible(false);
 
     fadeTimerRef.current = setTimeout(() => {
+      setRevealKey(0);
       openProject(slug);
       setIsGridFadedOut(false);
       scrollParentToTop();
       requestAnimationFrame(() => {
-        setIsDetailVisible(true);
+        requestAnimationFrame(() => {
+          setIsDetailVisible(true);
+        });
       });
-    }, 450);
+    }, FADE_OUT_MS);
   };
 
   const handleBackToGrid = () => {
     if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+
+    if (prefersReducedMotion()) {
+      setIsDetailVisible(false);
+      setIsGridFadedOut(false);
+      closeProject();
+      scrollParentToTop();
+      return;
+    }
+
     setIsDetailVisible(false);
 
     fadeTimerRef.current = setTimeout(() => {
@@ -189,15 +163,19 @@ export function ProyectosSection() {
       closeProject();
       scrollParentToTop();
       requestAnimationFrame(() => {
-        setIsGridFadedOut(false);
+        requestAnimationFrame(() => {
+          setIsGridFadedOut(false);
+        });
       });
-    }, 450);
+    }, FADE_OUT_MS);
   };
 
   const visibleProjects =
-    selectedCategory === null
+    displayedCategory === null
       ? PROJECTS_DATA
-      : PROJECTS_DATA.filter((project) => project.category === selectedCategory);
+      : PROJECTS_DATA.filter(
+          (project) => project.category === displayedCategory
+        );
 
   return (
     <section
@@ -208,9 +186,8 @@ export function ProyectosSection() {
       <div className="site-container">
         {!isDetailView ? (
           <div
-            className={`transition-opacity duration-500 ${
-              isGridFadedOut ? "opacity-0 pointer-events-none" : "opacity-100"
-            }`}
+            data-visible={isGridFadedOut ? "false" : "true"}
+            className="site-view-fade"
           >
             {/* barra superior de filtros por tipologia alineada a la derecha sobre separador completo */}
             <header className="mb-12 w-full">
@@ -252,17 +229,30 @@ export function ProyectosSection() {
 
             {/* grilla de 3 columnas con tarjetas de tipologia */}
             <ul
-              ref={gridRef}
+              key={revealKey}
               role="list"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-14"
+              data-exiting={isFilterExiting ? "true" : "false"}
+              className="projects-grid-stage grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-14"
             >
               {visibleProjects.map((project, idx) => {
                 const theme = CATEGORY_THEMES[project.category];
+                const delayMs =
+                  idx < MAX_STAGGER_ITEMS ? idx * STAGGER_STEP_MS : 0;
                 return (
                   <li
                     key={project.id}
-                    data-project-id={project.id}
-                    className="project-card-item"
+                    className={
+                      revealKey > 0
+                        ? "project-card-item project-card-reveal"
+                        : "project-card-item"
+                    }
+                    style={
+                      revealKey > 0
+                        ? ({
+                            "--card-delay": `${delayMs}ms`,
+                          } as React.CSSProperties)
+                        : undefined
+                    }
                   >
                     <article
                       className="project-card flex items-start gap-[7px]"
@@ -349,11 +339,10 @@ export function ProyectosSection() {
             </ul>
           </div>
         ) : (
-          /* vista de proyecto individual con difuminacion inversa */
+          /* vista de proyecto individual con misma coreografia de fade (180ms salida / 420ms entrada) */
           <div
-            className={`transition-opacity duration-500 ${
-              isDetailVisible ? "opacity-100" : "opacity-0"
-            }`}
+            data-visible={isDetailVisible ? "true" : "false"}
+            className="site-view-fade"
           >
             {activeProjectSlug && (
               <ProjectDetailRenderer

@@ -7,6 +7,9 @@
   --muted: #737373;
   --site-max-w: 1120px;
   --site-pad-x: 1.5rem;
+  --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-fade-out: 180ms;
+  --motion-fade-in: 420ms;
 }
 
 @media (min-width: 640px) {
@@ -320,9 +323,9 @@ body {
     transform: translate3d(-8px, 0, 0);
     filter: blur(3px);
     transition:
-      opacity 160ms ease,
-      transform 160ms ease,
-      filter 160ms ease,
+      opacity var(--motion-fade-out) ease-in,
+      transform var(--motion-fade-out) ease-in,
+      filter var(--motion-fade-out) ease-in,
       color 200ms ease;
   }
 
@@ -331,9 +334,12 @@ body {
     transform: translate3d(0, 0, 0);
     filter: blur(0px);
     transition:
-      opacity 420ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
-      transform 420ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
-      filter 420ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      opacity var(--motion-fade-in) var(--motion-ease-out)
+        var(--reveal-delay, 0ms),
+      transform var(--motion-fade-in) var(--motion-ease-out)
+        var(--reveal-delay, 0ms),
+      filter var(--motion-fade-in) var(--motion-ease-out)
+        var(--reveal-delay, 0ms),
       color 200ms ease 0ms;
   }
 }
@@ -698,123 +704,71 @@ body {
   }
 }
 
-/* transicion simetrica al filtrar y desmarcar categorias en la grilla de proyectos */
-:root {
-  view-transition-name: none;
-}
-
-::view-transition {
-  pointer-events: none;
-}
-
-.project-card-item {
-  view-transition-class: project-card;
-}
-
-.project-card-item[data-vt-motion="fly-up"] {
-  view-transition-class: project-card project-card-fly-up;
-}
-
-.project-card-item[data-vt-motion="fly-down"] {
-  view-transition-class: project-card project-card-fly-down;
-}
-
-::view-transition-group(.project-card) {
-  z-index: 1;
-  animation-duration: 0.48s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-::view-transition-group(.project-card-fly-up) {
-  z-index: 2;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-::view-transition-group(.project-card-fly-down) {
-  z-index: 2;
-  animation-timing-function: cubic-bezier(0.42, 0, 0.85, 0.35);
-}
-
-/* tarjetas persistentes en pantalla sin atenuacion intermedia por cross-fade */
-::view-transition-old(.project-card):not(:only-child) {
-  animation: none;
-  opacity: 0;
-}
-
-::view-transition-new(.project-card):not(:only-child) {
-  animation: none;
+/* coreografia unificada de fades para vistas (grilla <-> detalle) y filtro escalonado */
+.site-view-fade {
   opacity: 1;
 }
 
-/* fondo: difuminacion limpia en su sitio al entrar o salir */
-::view-transition-old(.project-card):only-child {
-  animation: project-card-out 0.28s ease-in both;
+.site-view-fade[data-visible="false"] {
+  opacity: 0;
+  pointer-events: none;
 }
 
-::view-transition-new(.project-card):only-child {
-  animation: project-card-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+.projects-grid-stage {
+  opacity: 1;
 }
 
-/* primer plano: vuelo continuo simetrico desde abajo al filtrar y hacia abajo al desmarcar */
-::view-transition-new(.project-card-fly-up):only-child {
-  animation: project-card-fly-up 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+.projects-grid-stage[data-exiting="true"] {
+  opacity: 0;
+  pointer-events: none;
 }
 
-::view-transition-old(.project-card-fly-down):only-child {
-  animation: project-card-fly-down 0.48s cubic-bezier(0.42, 0, 0.85, 0.35) both;
+@media (prefers-reduced-motion: no-preference) {
+  .site-view-fade {
+    transform: translate3d(0, 0, 0);
+    transition:
+      opacity var(--motion-fade-in) var(--motion-ease-out),
+      transform var(--motion-fade-in) var(--motion-ease-out);
+  }
+
+  .site-view-fade[data-visible="false"] {
+    transform: translate3d(0, 6px, 0);
+    transition:
+      opacity var(--motion-fade-out) ease-in,
+      transform var(--motion-fade-out) ease-in;
+  }
+
+  .projects-grid-stage {
+    transform: translate3d(0, 0, 0);
+    transition:
+      opacity var(--motion-fade-out) ease-in,
+      transform var(--motion-fade-out) ease-in;
+  }
+
+  .projects-grid-stage[data-exiting="true"] {
+    transform: translate3d(0, 6px, 0);
+  }
+
+  .project-card-reveal {
+    animation: project-card-reveal var(--motion-fade-in) var(--motion-ease-out)
+      var(--card-delay, 0ms) both;
+  }
 }
 
-@keyframes project-card-in {
+@keyframes project-card-reveal {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: translate3d(0, 12px, 0);
   }
-}
-
-@keyframes project-card-out {
   to {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-}
-
-@keyframes project-card-fly-up {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 65vh, 0);
-  }
-  25% {
-    opacity: 1;
-  }
-  100% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes project-card-fly-down {
-  0% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-  75% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(0, 65vh, 0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .project-card-img {
     transition: none;
-  }
-
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
   }
 }
 
@@ -849,7 +803,7 @@ body {
     0 12px 30px rgba(0, 0, 0, 0.16);
   opacity: 0;
   will-change: transform, opacity;
-  transition: opacity 160ms ease;
+  transition: opacity var(--motion-fade-out) ease;
   z-index: 10;
 }
 
