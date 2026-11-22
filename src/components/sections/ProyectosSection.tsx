@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -28,6 +28,8 @@ export function ProyectosSection() {
   } = useCanvas();
 
   const sectionRef = useRef<HTMLElement>(null);
+  const gridRef = useRef<HTMLUListElement>(null);
+  const transitionTokenRef = useRef(0);
   const [isGridFadedOut, setIsGridFadedOut] = useState(false);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [filterAnnouncement, setFilterAnnouncement] = useState("");
@@ -35,13 +37,64 @@ export function ProyectosSection() {
 
   const isDetailView = activeProjectSlug !== null;
 
+  // limpia los nombres y clases temporales de view transition al finalizar
+  const clearTransitionStyles = useCallback(() => {
+    const list = gridRef.current;
+    if (!list) return;
+    for (const child of Array.from(list.children)) {
+      const el = child as HTMLElement;
+      el.style.viewTransitionName = "";
+      el.removeAttribute("data-vt-motion");
+    }
+  }, []);
+
+  // asigna view-transition-name solo a tarjetas visibles en el viewport para evitar recortes offscreen
+  const tagVisibleCards = useCallback(
+    (
+      motion: "fly-up" | "fly-down" | null,
+      onlyMotionIds: Set<string> | null = null
+    ) => {
+      const list = gridRef.current;
+      if (!list) return new Set<string>();
+      const scrollParent = sectionRef.current?.parentElement;
+      const paneRect = scrollParent
+        ? scrollParent.getBoundingClientRect()
+        : { top: 0, bottom: window.innerHeight };
+
+      const visibleIds = new Set<string>();
+      for (const child of Array.from(list.children)) {
+        const el = child as HTMLElement;
+        const id = el.dataset.projectId;
+        if (!id) continue;
+        const rect = el.getBoundingClientRect();
+        const isInView =
+          rect.bottom > paneRect.top && rect.top < paneRect.bottom;
+        if (isInView) {
+          visibleIds.add(id);
+          el.style.viewTransitionName = `project-card-${id}`;
+          if (motion && (!onlyMotionIds || onlyMotionIds.has(id))) {
+            el.setAttribute("data-vt-motion", motion);
+          } else {
+            el.removeAttribute("data-vt-motion");
+          }
+        } else {
+          el.style.viewTransitionName = "none";
+          el.removeAttribute("data-vt-motion");
+        }
+      }
+      return visibleIds;
+    },
+    []
+  );
+
   useEffect(() => {
     return () => {
       if (fadeTimerRef.current) {
         clearTimeout(fadeTimerRef.current);
       }
+      clearTransitionStyles();
     };
-  }, []);
+  }, [clearTransitionStyles]);
 
   const scrollParentToTop = () => {
     const scrollParent = sectionRef.current?.parentElement;
@@ -50,9 +103,10 @@ export function ProyectosSection() {
     }
   };
 
-  // alterna la categoria activa y anima el reordenamiento con view transitions si el navegador lo soporta
+  // alterna la categoria activa con animacion simetrica de entrada y salida via view transitions
   const handleSelectCategory = (category: CategoryId) => {
     const nextCategory = selectedCategory === category ? null : category;
+    const mode = nextCategory === null ? "unfilter" : "filter";
     const visibleCount =
       nextCategory === null
         ? PROJECTS_DATA.length
@@ -75,13 +129,37 @@ export function ProyectosSection() {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const doc = document as Document & {
-      startViewTransition?: (callback: () => void) => void;
+      startViewTransition?: (callback: () => void) => {
+        finished: Promise<void>;
+      };
     };
 
     if (typeof doc.startViewTransition === "function" && !reducedMotion) {
-      doc.startViewTransition(() => {
+      const token = ++transitionTokenRef.current;
+      clearTransitionStyles();
+
+      // captura solo tarjetas visibles antes del cambio (al desmarcar, bajan por delante)
+      const prevVisibleIds = tagVisibleCards(
+        mode === "unfilter" ? "fly-down" : null
+      );
+
+      const transition = doc.startViewTransition(() => {
         flushSync(applyUpdate);
+        // etiqueta las tarjetas visibles resultantes (al filtrar, suben por delante)
+        if (mode === "filter") {
+          tagVisibleCards("fly-up");
+        } else {
+          tagVisibleCards("fly-down", prevVisibleIds);
+        }
       });
+
+      transition.finished
+        .catch(() => {})
+        .finally(() => {
+          if (transitionTokenRef.current === token) {
+            clearTransitionStyles();
+          }
+        });
     } else {
       applyUpdate();
     }
@@ -174,6 +252,7 @@ export function ProyectosSection() {
 
             {/* grilla de 3 columnas con tarjetas de tipologia */}
             <ul
+              ref={gridRef}
               role="list"
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-14"
             >
@@ -182,12 +261,8 @@ export function ProyectosSection() {
                 return (
                   <li
                     key={project.id}
+                    data-project-id={project.id}
                     className="project-card-item"
-                    style={
-                      activeSection === "proyectos"
-                        ? { viewTransitionName: `project-card-${project.id}` }
-                        : undefined
-                    }
                   >
                     <article
                       className="project-card flex items-start gap-[7px]"
@@ -214,7 +289,7 @@ export function ProyectosSection() {
                             width={900}
                             height={900}
                             loading={
-                              activeSection === "proyectos" && idx < 6
+                              activeSection === "proyectos" && idx < 9
                                 ? "eager"
                                 : "lazy"
                             }

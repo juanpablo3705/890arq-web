@@ -698,7 +698,7 @@ body {
   }
 }
 
-/* transicion de reordenamiento suave al filtrar la grilla de proyectos */
+/* transicion simetrica al filtrar y desmarcar categorias en la grilla de proyectos */
 :root {
   view-transition-name: none;
 }
@@ -711,21 +711,57 @@ body {
   view-transition-class: project-card;
 }
 
+.project-card-item[data-vt-motion="fly-up"] {
+  view-transition-class: project-card project-card-fly-up;
+}
+
+.project-card-item[data-vt-motion="fly-down"] {
+  view-transition-class: project-card project-card-fly-down;
+}
+
 ::view-transition-group(.project-card) {
-  animation-duration: 0.4s;
+  z-index: 1;
+  animation-duration: 0.48s;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-::view-transition-new(.project-card):only-child {
-  animation-name: project-card-in;
-  animation-duration: 0.32s;
-  animation-timing-function: ease-out;
+::view-transition-group(.project-card-fly-up) {
+  z-index: 2;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+::view-transition-group(.project-card-fly-down) {
+  z-index: 2;
+  animation-timing-function: cubic-bezier(0.42, 0, 0.85, 0.35);
+}
+
+/* tarjetas persistentes en pantalla sin atenuacion intermedia por cross-fade */
+::view-transition-old(.project-card):not(:only-child) {
+  animation: none;
+  opacity: 0;
+}
+
+::view-transition-new(.project-card):not(:only-child) {
+  animation: none;
+  opacity: 1;
+}
+
+/* fondo: difuminacion limpia en su sitio al entrar o salir */
 ::view-transition-old(.project-card):only-child {
-  animation-name: project-card-out;
-  animation-duration: 0.24s;
-  animation-timing-function: ease-in;
+  animation: project-card-out 0.28s ease-in both;
+}
+
+::view-transition-new(.project-card):only-child {
+  animation: project-card-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+}
+
+/* primer plano: vuelo continuo simetrico desde abajo al filtrar y hacia abajo al desmarcar */
+::view-transition-new(.project-card-fly-up):only-child {
+  animation: project-card-fly-up 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+::view-transition-old(.project-card-fly-down):only-child {
+  animation: project-card-fly-down 0.48s cubic-bezier(0.42, 0, 0.85, 0.35) both;
 }
 
 @keyframes project-card-in {
@@ -739,6 +775,34 @@ body {
   to {
     opacity: 0;
     transform: scale(0.96);
+  }
+}
+
+@keyframes project-card-fly-up {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 65vh, 0);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes project-card-fly-down {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 65vh, 0);
   }
 }
 
