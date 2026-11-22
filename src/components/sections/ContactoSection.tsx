@@ -435,7 +435,7 @@ export function ContactoSection() {
             className="lg:col-span-4 lg:pt-[22px]"
           >
             <ul role="list" className="flex flex-col items-start gap-5">
-              {CONTACTO_CHANNEL_ORDER.map((id, index) => {
+              {CONTACTO_CHANNEL_ORDER.map((id) => {
                 const channel = SOCIAL_CHANNELS[id];
                 return (
                   <li key={id} className="w-full">
@@ -460,11 +460,6 @@ export function ContactoSection() {
 
                       <span
                         data-visible={isDocked ? "true" : "false"}
-                        style={
-                          {
-                            "--reveal-delay": `${index * 75}ms`,
-                          } as React.CSSProperties
-                        }
                         className="contacto-channel-label font-mono text-xs leading-[1.4] text-black group-hover:text-[#E60000]"
                       >
                         {channel.contactoLabel}

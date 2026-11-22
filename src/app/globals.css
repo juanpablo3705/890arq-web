@@ -334,13 +334,10 @@ body {
     transform: translate3d(0, 0, 0);
     filter: blur(0px);
     transition:
-      opacity var(--motion-fade-in) var(--motion-ease-out)
-        var(--reveal-delay, 0ms),
-      transform var(--motion-fade-in) var(--motion-ease-out)
-        var(--reveal-delay, 0ms),
-      filter var(--motion-fade-in) var(--motion-ease-out)
-        var(--reveal-delay, 0ms),
-      color 200ms ease 0ms;
+      opacity var(--motion-fade-in) var(--motion-ease-out),
+      transform var(--motion-fade-in) var(--motion-ease-out),
+      filter var(--motion-fade-in) var(--motion-ease-out),
+      color 200ms ease;
   }
 }
 

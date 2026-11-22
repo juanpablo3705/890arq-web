@@ -9,21 +9,23 @@ import {
   SocialChannelId,
 } from "./socialChannels";
 
-const FLIGHT_TO_CONTACTO_MS = CANVAS_TRANSITION_MS;
-const FLIGHT_TO_CORNER_MS = CANVAS_TRANSITION_MS - 30;
 const FLIGHT_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 const ENTER_DELAYS: Record<SocialChannelId, number> = {
-  mail: 30,
-  whatsapp: 95,
-  instagram: 160,
+  mail: 0,
+  whatsapp: 45,
+  instagram: 90,
 };
 
 const EXIT_DELAYS: Record<SocialChannelId, number> = {
   instagram: 0,
-  whatsapp: 60,
-  mail: 120,
+  whatsapp: 45,
+  mail: 90,
 };
+
+// vuelo acotado para aterrizar exactamente junto al final del desplazamiento del lienzo
+const FLIGHT_TO_CONTACTO_MS = CANVAS_TRANSITION_MS - ENTER_DELAYS.instagram;
+const FLIGHT_TO_CORNER_MS = CANVAS_TRANSITION_MS - EXIT_DELAYS.mail;
 
 // marco fijo con logo superior y botones sociales coreografiados hacia contacto
 export function UIFrame() {
@@ -128,17 +130,16 @@ export function UIFrame() {
               el.style.transition = `transform ${FLIGHT_TO_CONTACTO_MS}ms ${FLIGHT_EASING} ${ENTER_DELAYS[id]}ms, background-color 200ms ease`;
               el.style.transform = `translate3d(${delta.dx}px, ${delta.dy}px, 0)`;
             }
-          });
 
-          const totalEnterMs =
-            FLIGHT_TO_CONTACTO_MS + ENTER_DELAYS.instagram + 20;
-          doneTimer = setTimeout(() => {
-            for (const id of CONTACTO_CHANNEL_ORDER) {
-              const el = floatingLinkRefs.current[id];
-              if (el) el.style.willChange = "auto";
-            }
-            setSocialDockPhase("docked");
-          }, totalEnterMs);
+            const totalEnterMs = FLIGHT_TO_CONTACTO_MS + ENTER_DELAYS.instagram;
+            doneTimer = setTimeout(() => {
+              for (const id of CONTACTO_CHANNEL_ORDER) {
+                const el = floatingLinkRefs.current[id];
+                if (el) el.style.willChange = "auto";
+              }
+              setSocialDockPhase("docked");
+            }, totalEnterMs);
+          });
         }
       }
     } else if (prevSection === "contacto") {
@@ -193,14 +194,14 @@ export function UIFrame() {
               el.style.transition = `transform ${FLIGHT_TO_CORNER_MS}ms ${FLIGHT_EASING} ${EXIT_DELAYS[id]}ms, background-color 200ms ease`;
               el.style.transform = "translate3d(0px, 0px, 0px)";
             }
+
+            const totalExitMs = FLIGHT_TO_CORNER_MS + EXIT_DELAYS.mail;
+            doneTimer = setTimeout(() => {
+              clearInlineTransforms();
+              setSocialDockPhase("corner");
+            }, totalExitMs);
           });
         });
-
-        const totalExitMs = FLIGHT_TO_CORNER_MS + EXIT_DELAYS.mail + 30;
-        doneTimer = setTimeout(() => {
-          clearInlineTransforms();
-          setSocialDockPhase("corner");
-        }, totalExitMs);
       }
     }
 
